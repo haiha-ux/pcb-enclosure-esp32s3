@@ -1,0 +1,1 @@
+{"type": "machine", "name": "Generic 0.4", "from": "User", "inherits": "", "printer_technology": "FFF", "nozzle_diameter": ["0.4"], "printable_area": ["0x0", "220x0", "220x220", "0x220"], "printable_height": "250", "gcode_flavor": "marlin2", "version": "2.5.0.0", "layer_change_gcode": "G92 E0", "use_relative_e_distances": "1"}

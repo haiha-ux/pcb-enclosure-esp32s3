@@ -1,0 +1,68 @@
+[
+ {
+  "case": "WALL 1.4",
+  "override": {
+   "WALL": 1.4
+  },
+  "caught": true,
+  "failed_checks": [
+   "USB-C opening centred on J1 (+-0.1)",
+   "Qwiic opening centred on J3 (+-0.1)",
+   "base: wall >= 1.6 everywhere (ray method)",
+   "lid: wall >= 1.6 everywhere (ray method)"
+  ]
+ },
+ {
+  "case": "USB opening 0.2 mm too small",
+  "override": {
+   "USB_OPEN_CLR": -0.2
+  },
+  "caught": true,
+  "failed_checks": [
+   "no interference mating_usb_shell | lid.step#0",
+   "USB-C plug shell 8.4x2.6 and overmold 12.85x7.0 clear the lid"
+  ]
+ },
+ {
+  "case": "board clearance 0.2",
+  "override": {
+   "CLR_BOARD": 0.2
+  },
+  "caught": true,
+  "failed_checks": [
+   "base: STL watertight, volume within 0.5 % of STEP",
+   "lid: STL watertight, volume within 0.5 % of STEP",
+   "board to side walls >= CLR_BOARD 0.5"
+  ]
+ },
+ {
+  "case": "insert hole 5.0 deep",
+  "override": {
+   "INSERT_HOLE_DEPTH": 5.0
+  },
+  "caught": true,
+  "failed_checks": [
+   "insert@3.50,-3.50: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@68.50,-3.50: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@3.50,-44.50: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@68.50,-44.50: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@-4.75,37.49: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@70.83,37.49: hole 4.0 deep >= 6.7, wall >= 1.6"
+  ]
+ },
+ {
+  "case": "insert hole 3.6",
+  "override": {
+   "INSERT_HOLE_D": 3.6
+  },
+  "caught": true,
+  "failed_checks": [
+   "insert@3.50,-3.50: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@68.50,-3.50: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@3.50,-44.50: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@68.50,-44.50: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@-4.75,37.49: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@70.83,37.49: hole 4.0 deep >= 6.7, wall >= 1.6"
+  ]
+ }
+]

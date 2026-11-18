@@ -1,0 +1,1233 @@
+{
+  "version": 1,
+  "generator": "OrcaSlicer 2.5.0",
+  "units": {
+    "time": "s",
+    "length": "mm",
+    "volume": "mm3",
+    "weight": "g"
+  },
+  "summary": {
+    "time": 9885.794,
+    "prepare_time": 1.753,
+    "travel_time": 327.012,
+    "travel_distance": 23570.41,
+    "layer_count": 52,
+    "volume": 18495.566,
+    "weight": 22.9345,
+    "filament_cost": 0.0,
+    "filament_changes": 0,
+    "filaments": [
+      {
+        "id": 1,
+        "length": 7689.56,
+        "volume": 18495.566,
+        "weight": 22.9345,
+        "cost": 0.0,
+        "model": {
+          "volume": 18495.566,
+          "weight": 22.9345
+        },
+        "support": {
+          "volume": 0.0,
+          "weight": 0.0
+        },
+        "prime_tower": {
+          "volume": 0.0,
+          "weight": 0.0
+        },
+        "flush": {
+          "volume": 0.0,
+          "weight": 0.0
+        }
+      }
+    ],
+    "features": {
+      "Inner wall": {
+        "time": 1523.781,
+        "volume": 3018.513,
+        "weight": 3.743
+      },
+      "Outer wall": {
+        "time": 1158.949,
+        "volume": 2252.07,
+        "weight": 2.7926
+      },
+      "Sparse infill": {
+        "time": 782.258,
+        "volume": 1511.571,
+        "weight": 1.8743
+      },
+      "Internal solid infill": {
+        "time": 3259.243,
+        "volume": 6328.451,
+        "weight": 7.8473
+      },
+      "Top surface": {
+        "time": 807.202,
+        "volume": 1574.39,
+        "weight": 1.9522
+      },
+      "Bottom surface": {
+        "time": 820.445,
+        "volume": 1577.282,
+        "weight": 1.9558
+      },
+      "Internal Bridge": {
+        "time": 1134.444,
+        "volume": 2202.828,
+        "weight": 2.7315
+      },
+      "Skirt": {
+        "time": 15.305,
+        "volume": 30.461,
+        "weight": 0.0378
+      }
+    }
+  },
+  "layers": [
+    {
+      "z": 0.2,
+      "time": 884.346,
+      "travel_time": 3.065,
+      "volume": 1695.892,
+      "weight": 2.1029,
+      "features": {
+        "Inner wall": {
+          "time": 30.064,
+          "volume": 58.548,
+          "weight": 0.0726
+        },
+        "Outer wall": {
+          "time": 15.052,
+          "volume": 29.602,
+          "weight": 0.0367
+        },
+        "Bottom surface": {
+          "time": 820.445,
+          "volume": 1577.282,
+          "weight": 1.9558
+        },
+        "Skirt": {
+          "time": 15.305,
+          "volume": 30.461,
+          "weight": 0.0378
+        }
+      }
+    },
+    {
+      "z": 0.4,
+      "time": 852.762,
+      "travel_time": 2.298,
+      "volume": 1662.608,
+      "weight": 2.0616,
+      "features": {
+        "Inner wall": {
+          "time": 29.315,
+          "volume": 58.548,
+          "weight": 0.0726
+        },
+        "Outer wall": {
+          "time": 14.869,
+          "volume": 29.602,
+          "weight": 0.0367
+        },
+        "Internal solid infill": {
+          "time": 806.036,
+          "volume": 1574.459,
+          "weight": 1.9523
+        }
+      }
+    },
+    {
+      "z": 0.6,
+      "time": 851.953,
+      "travel_time": 1.342,
+      "volume": 1662.711,
+      "weight": 2.0618,
+      "features": {
+        "Inner wall": {
+          "time": 29.315,
+          "volume": 58.548,
+          "weight": 0.0726
+        },
+        "Outer wall": {
+          "time": 14.875,
+          "volume": 29.602,
+          "weight": 0.0367
+        },
+        "Internal solid infill": {
+          "time": 806.024,
+          "volume": 1574.562,
+          "weight": 1.9525
+        }
+      }
+    },
+    {
+      "z": 0.8,
+      "time": 202.49,
+      "travel_time": 2.415,
+      "volume": 391.392,
+      "weight": 0.4853,
+      "features": {
+        "Inner wall": {
+          "time": 29.315,
+          "volume": 58.548,
+          "weight": 0.0726
+        },
+        "Outer wall": {
+          "time": 14.873,
+          "volume": 29.602,
+          "weight": 0.0367
+        },
+        "Sparse infill": {
+          "time": 155.495,
+          "volume": 303.242,
+          "weight": 0.376
+        }
+      }
+    },
+    {
+      "z": 1.0,
+      "time": 226.936,
+      "travel_time": 3.712,
+      "volume": 425.658,
+      "weight": 0.5278,
+      "features": {
+        "Inner wall": {
+          "time": 29.315,
+          "volume": 58.548,
+          "weight": 0.0726
+        },
+        "Outer wall": {
+          "time": 14.873,
+          "volume": 29.602,
+          "weight": 0.0367
+        },
+        "Sparse infill": {
+          "time": 156.299,
+          "volume": 300.634,
+          "weight": 0.3728
+        },
+        "Internal Bridge": {
+          "time": 21.852,
+          "volume": 36.874,
+          "weight": 0.0457
+        }
+      }
+    },
+    {
+      "z": 1.2,
+      "time": 221.415,
+      "travel_time": 3.885,
+      "volume": 416.017,
+      "weight": 0.5159,
+      "features": {
+        "Inner wall": {
+          "time": 29.315,
+          "volume": 58.548,
+          "weight": 0.0726
+        },
+        "Outer wall": {
+          "time": 14.873,
+          "volume": 29.602,
+          "weight": 0.0367
+        },
+        "Sparse infill": {
+          "time": 155.083,
+          "volume": 300.633,
+          "weight": 0.3728
+        },
+        "Internal solid infill": {
+          "time": 17.294,
+          "volume": 27.234,
+          "weight": 0.0338
+        }
+      }
+    },
+    {
+      "z": 1.4,
+      "time": 220.95,
+      "travel_time": 3.522,
+      "volume": 416.023,
+      "weight": 0.5159,
+      "features": {
+        "Inner wall": {
+          "time": 29.315,
+          "volume": 58.548,
+          "weight": 0.0726
+        },
+        "Outer wall": {
+          "time": 14.869,
+          "volume": 29.602,
+          "weight": 0.0367
+        },
+        "Sparse infill": {
+          "time": 155.076,
+          "volume": 300.633,
+          "weight": 0.3728
+        },
+        "Internal solid infill": {
+          "time": 17.268,
+          "volume": 27.24,
+          "weight": 0.0338
+        }
+      }
+    },
+    {
+      "z": 1.6,
+      "time": 232.093,
+      "travel_time": 6.161,
+      "volume": 434.604,
+      "weight": 0.5389,
+      "features": {
+        "Inner wall": {
+          "time": 29.315,
+          "volume": 58.548,
+          "weight": 0.0726
+        },
+        "Outer wall": {
+          "time": 14.869,
+          "volume": 29.602,
+          "weight": 0.0367
+        },
+        "Sparse infill": {
+          "time": 152.187,
+          "volume": 295.081,
+          "weight": 0.3659
+        },
+        "Internal solid infill": {
+          "time": 12.505,
+          "volume": 24.497,
+          "weight": 0.0304
+        },
+        "Top surface": {
+          "time": 16.075,
+          "volume": 26.877,
+          "weight": 0.0333
+        }
+      }
+    },
+    {
+      "z": 1.8,
+      "time": 1168.225,
+      "travel_time": 7.562,
+      "volume": 2260.778,
+      "weight": 2.8034,
+      "features": {
+        "Inner wall": {
+          "time": 35.223,
+          "volume": 70.186,
+          "weight": 0.087
+        },
+        "Outer wall": {
+          "time": 17.26,
+          "volume": 34.132,
+          "weight": 0.0423
+        },
+        "Sparse infill": {
+          "time": 0.788,
+          "volume": 0.949,
+          "weight": 0.0012
+        },
+        "Internal Bridge": {
+          "time": 1105.917,
+          "volume": 2155.512,
+          "weight": 2.6728
+        }
+      }
+    },
+    {
+      "z": 2.0,
+      "time": 858.55,
+      "travel_time": 8.288,
+      "volume": 1648.334,
+      "weight": 2.0439,
+      "features": {
+        "Inner wall": {
+          "time": 35.223,
+          "volume": 70.186,
+          "weight": 0.087
+        },
+        "Outer wall": {
+          "time": 17.26,
+          "volume": 34.132,
+          "weight": 0.0423
+        },
+        "Sparse infill": {
+          "time": 1.33,
+          "volume": 2.055,
+          "weight": 0.0025
+        },
+        "Internal solid infill": {
+          "time": 794.572,
+          "volume": 1541.962,
+          "weight": 1.912
+        }
+      }
+    },
+    {
+      "z": 2.2,
+      "time": 858.425,
+      "travel_time": 7.705,
+      "volume": 1648.277,
+      "weight": 2.0439,
+      "features": {
+        "Inner wall": {
+          "time": 35.223,
+          "volume": 70.186,
+          "weight": 0.087
+        },
+        "Outer wall": {
+          "time": 17.26,
+          "volume": 34.132,
+          "weight": 0.0423
+        },
+        "Sparse infill": {
+          "time": 1.359,
+          "volume": 2.078,
+          "weight": 0.0026
+        },
+        "Internal solid infill": {
+          "time": 794.675,
+          "volume": 1541.882,
+          "weight": 1.9119
+        }
+      }
+    },
+    {
+      "z": 2.4,
+      "time": 866.113,
+      "travel_time": 23.943,
+      "volume": 1646.304,
+      "weight": 2.0414,
+      "features": {
+        "Inner wall": {
+          "time": 35.223,
+          "volume": 70.186,
+          "weight": 0.087
+        },
+        "Outer wall": {
+          "time": 17.259,
+          "volume": 34.132,
+          "weight": 0.0423
+        },
+        "Sparse infill": {
+          "time": 1.637,
+          "volume": 2.175,
+          "weight": 0.0027
+        },
+        "Top surface": {
+          "time": 786.421,
+          "volume": 1539.812,
+          "weight": 1.9094
+        }
+      }
+    },
+    {
+      "z": 2.6,
+      "time": 108.615,
+      "travel_time": 9.329,
+      "volume": 189.762,
+      "weight": 0.2353,
+      "features": {
+        "Inner wall": {
+          "time": 52.812,
+          "volume": 104.368,
+          "weight": 0.1294
+        },
+        "Outer wall": {
+          "time": 43.035,
+          "volume": 83.095,
+          "weight": 0.103
+        },
+        "Sparse infill": {
+          "time": 1.755,
+          "volume": 2.299,
+          "weight": 0.0029
+        }
+      }
+    },
+    {
+      "z": 2.8,
+      "time": 109.543,
+      "travel_time": 9.525,
+      "volume": 191.206,
+      "weight": 0.2371,
+      "features": {
+        "Inner wall": {
+          "time": 52.814,
+          "volume": 104.368,
+          "weight": 0.1294
+        },
+        "Outer wall": {
+          "time": 43.035,
+          "volume": 83.095,
+          "weight": 0.103
+        },
+        "Sparse infill": {
+          "time": 1.25,
+          "volume": 1.792,
+          "weight": 0.0022
+        },
+        "Internal solid infill": {
+          "time": 1.059,
+          "volume": 1.951,
+          "weight": 0.0024
+        }
+      }
+    },
+    {
+      "z": 3.0,
+      "time": 113.569,
+      "travel_time": 9.359,
+      "volume": 197.905,
+      "weight": 0.2454,
+      "features": {
+        "Inner wall": {
+          "time": 52.808,
+          "volume": 104.368,
+          "weight": 0.1294
+        },
+        "Outer wall": {
+          "time": 43.024,
+          "volume": 83.095,
+          "weight": 0.103
+        },
+        "Internal Bridge": {
+          "time": 6.675,
+          "volume": 10.443,
+          "weight": 0.0129
+        }
+      }
+    },
+    {
+      "z": 3.2,
+      "time": 111.899,
+      "travel_time": 9.344,
+      "volume": 194.869,
+      "weight": 0.2416,
+      "features": {
+        "Inner wall": {
+          "time": 52.813,
+          "volume": 104.368,
+          "weight": 0.1294
+        },
+        "Outer wall": {
+          "time": 43.039,
+          "volume": 83.095,
+          "weight": 0.103
+        },
+        "Internal solid infill": {
+          "time": 4.967,
+          "volume": 7.406,
+          "weight": 0.0092
+        }
+      }
+    },
+    {
+      "z": 3.4,
+      "time": 112.313,
+      "travel_time": 9.76,
+      "volume": 194.721,
+      "weight": 0.2415,
+      "features": {
+        "Inner wall": {
+          "time": 52.813,
+          "volume": 104.368,
+          "weight": 0.1294
+        },
+        "Outer wall": {
+          "time": 43.032,
+          "volume": 83.095,
+          "weight": 0.103
+        },
+        "Internal solid infill": {
+          "time": 4.843,
+          "volume": 7.258,
+          "weight": 0.009
+        }
+      }
+    },
+    {
+      "z": 3.6,
+      "time": 112.13,
+      "travel_time": 9.925,
+      "volume": 195.164,
+      "weight": 0.242,
+      "features": {
+        "Inner wall": {
+          "time": 52.813,
+          "volume": 104.368,
+          "weight": 0.1294
+        },
+        "Outer wall": {
+          "time": 43.041,
+          "volume": 83.095,
+          "weight": 0.103
+        },
+        "Top surface": {
+          "time": 4.706,
+          "volume": 7.701,
+          "weight": 0.0095
+        }
+      }
+    },
+    {
+      "z": 3.8,
+      "time": 107.876,
+      "travel_time": 9.224,
+      "volume": 189.581,
+      "weight": 0.2351,
+      "features": {
+        "Inner wall": {
+          "time": 52.741,
+          "volume": 104.224,
+          "weight": 0.1292
+        },
+        "Outer wall": {
+          "time": 44.236,
+          "volume": 85.357,
+          "weight": 0.1058
+        }
+      }
+    },
+    {
+      "z": 4.0,
+      "time": 107.877,
+      "travel_time": 9.224,
+      "volume": 189.581,
+      "weight": 0.2351,
+      "features": {
+        "Inner wall": {
+          "time": 52.741,
+          "volume": 104.224,
+          "weight": 0.1292
+        },
+        "Outer wall": {
+          "time": 44.237,
+          "volume": 85.357,
+          "weight": 0.1058
+        }
+      }
+    },
+    {
+      "z": 4.2,
+      "time": 107.876,
+      "travel_time": 9.224,
+      "volume": 189.581,
+      "weight": 0.2351,
+      "features": {
+        "Inner wall": {
+          "time": 52.741,
+          "volume": 104.224,
+          "weight": 0.1292
+        },
+        "Outer wall": {
+          "time": 44.236,
+          "volume": 85.357,
+          "weight": 0.1058
+        }
+      }
+    },
+    {
+      "z": 4.4,
+      "time": 107.845,
+      "travel_time": 9.204,
+      "volume": 189.581,
+      "weight": 0.2351,
+      "features": {
+        "Inner wall": {
+          "time": 52.736,
+          "volume": 104.224,
+          "weight": 0.1292
+        },
+        "Outer wall": {
+          "time": 44.23,
+          "volume": 85.357,
+          "weight": 0.1058
+        }
+      }
+    },
+    {
+      "z": 4.6,
+      "time": 107.878,
+      "travel_time": 9.224,
+      "volume": 189.581,
+      "weight": 0.2351,
+      "features": {
+        "Inner wall": {
+          "time": 52.742,
+          "volume": 104.224,
+          "weight": 0.1292
+        },
+        "Outer wall": {
+          "time": 44.238,
+          "volume": 85.357,
+          "weight": 0.1058
+        }
+      }
+    },
+    {
+      "z": 4.8,
+      "time": 107.88,
+      "travel_time": 9.223,
+      "volume": 189.581,
+      "weight": 0.2351,
+      "features": {
+        "Inner wall": {
+          "time": 52.742,
+          "volume": 104.224,
+          "weight": 0.1292
+        },
+        "Outer wall": {
+          "time": 44.24,
+          "volume": 85.357,
+          "weight": 0.1058
+        }
+      }
+    },
+    {
+      "z": 5.0,
+      "time": 107.884,
+      "travel_time": 9.223,
+      "volume": 189.581,
+      "weight": 0.2351,
+      "features": {
+        "Inner wall": {
+          "time": 52.742,
+          "volume": 104.224,
+          "weight": 0.1292
+        },
+        "Outer wall": {
+          "time": 44.243,
+          "volume": 85.357,
+          "weight": 0.1058
+        }
+      }
+    },
+    {
+      "z": 5.2,
+      "time": 107.887,
+      "travel_time": 9.223,
+      "volume": 189.581,
+      "weight": 0.2351,
+      "features": {
+        "Inner wall": {
+          "time": 52.742,
+          "volume": 104.224,
+          "weight": 0.1292
+        },
+        "Outer wall": {
+          "time": 44.245,
+          "volume": 85.357,
+          "weight": 0.1058
+        }
+      }
+    },
+    {
+      "z": 5.4,
+      "time": 107.874,
+      "travel_time": 9.223,
+      "volume": 189.581,
+      "weight": 0.2351,
+      "features": {
+        "Inner wall": {
+          "time": 52.742,
+          "volume": 104.224,
+          "weight": 0.1292
+        },
+        "Outer wall": {
+          "time": 44.235,
+          "volume": 85.357,
+          "weight": 0.1058
+        }
+      }
+    },
+    {
+      "z": 5.6,
+      "time": 96.734,
+      "travel_time": 8.498,
+      "volume": 171.895,
+      "weight": 0.2131,
+      "features": {
+        "Inner wall": {
+          "time": 48.227,
+          "volume": 95.941,
+          "weight": 0.119
+        },
+        "Outer wall": {
+          "time": 38.659,
+          "volume": 75.954,
+          "weight": 0.0942
+        }
+      }
+    },
+    {
+      "z": 5.8,
+      "time": 96.734,
+      "travel_time": 8.498,
+      "volume": 171.895,
+      "weight": 0.2131,
+      "features": {
+        "Inner wall": {
+          "time": 48.227,
+          "volume": 95.941,
+          "weight": 0.119
+        },
+        "Outer wall": {
+          "time": 38.659,
+          "volume": 75.954,
+          "weight": 0.0942
+        }
+      }
+    },
+    {
+      "z": 6.0,
+      "time": 96.751,
+      "travel_time": 8.506,
+      "volume": 171.895,
+      "weight": 0.2131,
+      "features": {
+        "Inner wall": {
+          "time": 48.227,
+          "volume": 95.941,
+          "weight": 0.119
+        },
+        "Outer wall": {
+          "time": 38.668,
+          "volume": 75.954,
+          "weight": 0.0942
+        }
+      }
+    },
+    {
+      "z": 6.2,
+      "time": 96.735,
+      "travel_time": 8.498,
+      "volume": 171.895,
+      "weight": 0.2131,
+      "features": {
+        "Inner wall": {
+          "time": 48.227,
+          "volume": 95.941,
+          "weight": 0.119
+        },
+        "Outer wall": {
+          "time": 38.659,
+          "volume": 75.954,
+          "weight": 0.0942
+        }
+      }
+    },
+    {
+      "z": 6.4,
+      "time": 96.731,
+      "travel_time": 8.497,
+      "volume": 171.895,
+      "weight": 0.2131,
+      "features": {
+        "Inner wall": {
+          "time": 48.227,
+          "volume": 95.941,
+          "weight": 0.119
+        },
+        "Outer wall": {
+          "time": 38.658,
+          "volume": 75.954,
+          "weight": 0.0942
+        }
+      }
+    },
+    {
+      "z": 6.6,
+      "time": 23.369,
+      "travel_time": 4.732,
+      "volume": 34.318,
+      "weight": 0.0426,
+      "features": {
+        "Inner wall": {
+          "time": 8.616,
+          "volume": 16.905,
+          "weight": 0.021
+        },
+        "Outer wall": {
+          "time": 9.077,
+          "volume": 17.413,
+          "weight": 0.0216
+        }
+      }
+    },
+    {
+      "z": 6.8,
+      "time": 23.369,
+      "travel_time": 4.732,
+      "volume": 34.318,
+      "weight": 0.0426,
+      "features": {
+        "Inner wall": {
+          "time": 8.616,
+          "volume": 16.905,
+          "weight": 0.021
+        },
+        "Outer wall": {
+          "time": 9.077,
+          "volume": 17.413,
+          "weight": 0.0216
+        }
+      }
+    },
+    {
+      "z": 7.0,
+      "time": 23.369,
+      "travel_time": 4.732,
+      "volume": 34.318,
+      "weight": 0.0426,
+      "features": {
+        "Inner wall": {
+          "time": 8.616,
+          "volume": 16.905,
+          "weight": 0.021
+        },
+        "Outer wall": {
+          "time": 9.077,
+          "volume": 17.413,
+          "weight": 0.0216
+        }
+      }
+    },
+    {
+      "z": 7.2,
+      "time": 23.369,
+      "travel_time": 4.732,
+      "volume": 34.318,
+      "weight": 0.0426,
+      "features": {
+        "Inner wall": {
+          "time": 8.616,
+          "volume": 16.905,
+          "weight": 0.021
+        },
+        "Outer wall": {
+          "time": 9.077,
+          "volume": 17.413,
+          "weight": 0.0216
+        }
+      }
+    },
+    {
+      "z": 7.4,
+      "time": 23.369,
+      "travel_time": 4.732,
+      "volume": 34.318,
+      "weight": 0.0426,
+      "features": {
+        "Inner wall": {
+          "time": 8.616,
+          "volume": 16.905,
+          "weight": 0.021
+        },
+        "Outer wall": {
+          "time": 9.077,
+          "volume": 17.413,
+          "weight": 0.0216
+        }
+      }
+    },
+    {
+      "z": 7.6,
+      "time": 23.369,
+      "travel_time": 4.732,
+      "volume": 34.318,
+      "weight": 0.0426,
+      "features": {
+        "Inner wall": {
+          "time": 8.616,
+          "volume": 16.905,
+          "weight": 0.021
+        },
+        "Outer wall": {
+          "time": 9.077,
+          "volume": 17.413,
+          "weight": 0.0216
+        }
+      }
+    },
+    {
+      "z": 7.8,
+      "time": 23.37,
+      "travel_time": 4.732,
+      "volume": 34.318,
+      "weight": 0.0426,
+      "features": {
+        "Inner wall": {
+          "time": 8.616,
+          "volume": 16.905,
+          "weight": 0.021
+        },
+        "Outer wall": {
+          "time": 9.077,
+          "volume": 17.413,
+          "weight": 0.0216
+        }
+      }
+    },
+    {
+      "z": 8.0,
+      "time": 23.37,
+      "travel_time": 4.732,
+      "volume": 34.318,
+      "weight": 0.0426,
+      "features": {
+        "Inner wall": {
+          "time": 8.616,
+          "volume": 16.905,
+          "weight": 0.021
+        },
+        "Outer wall": {
+          "time": 9.077,
+          "volume": 17.413,
+          "weight": 0.0216
+        }
+      }
+    },
+    {
+      "z": 8.2,
+      "time": 23.372,
+      "travel_time": 4.733,
+      "volume": 34.318,
+      "weight": 0.0426,
+      "features": {
+        "Inner wall": {
+          "time": 8.616,
+          "volume": 16.905,
+          "weight": 0.021
+        },
+        "Outer wall": {
+          "time": 9.078,
+          "volume": 17.413,
+          "weight": 0.0216
+        }
+      }
+    },
+    {
+      "z": 8.4,
+      "time": 23.371,
+      "travel_time": 4.733,
+      "volume": 34.318,
+      "weight": 0.0426,
+      "features": {
+        "Inner wall": {
+          "time": 8.616,
+          "volume": 16.905,
+          "weight": 0.021
+        },
+        "Outer wall": {
+          "time": 9.078,
+          "volume": 17.413,
+          "weight": 0.0216
+        }
+      }
+    },
+    {
+      "z": 8.6,
+      "time": 8.079,
+      "travel_time": 1.87,
+      "volume": 11.446,
+      "weight": 0.0142,
+      "features": {
+        "Inner wall": {
+          "time": 2.878,
+          "volume": 5.641,
+          "weight": 0.007
+        },
+        "Outer wall": {
+          "time": 3.033,
+          "volume": 5.804,
+          "weight": 0.0072
+        }
+      }
+    },
+    {
+      "z": 8.8,
+      "time": 8.012,
+      "travel_time": 1.801,
+      "volume": 11.446,
+      "weight": 0.0142,
+      "features": {
+        "Inner wall": {
+          "time": 2.878,
+          "volume": 5.641,
+          "weight": 0.007
+        },
+        "Outer wall": {
+          "time": 3.034,
+          "volume": 5.804,
+          "weight": 0.0072
+        }
+      }
+    },
+    {
+      "z": 9.0,
+      "time": 8.011,
+      "travel_time": 1.801,
+      "volume": 11.446,
+      "weight": 0.0142,
+      "features": {
+        "Inner wall": {
+          "time": 2.878,
+          "volume": 5.641,
+          "weight": 0.007
+        },
+        "Outer wall": {
+          "time": 3.034,
+          "volume": 5.804,
+          "weight": 0.0072
+        }
+      }
+    },
+    {
+      "z": 9.2,
+      "time": 8.011,
+      "travel_time": 1.801,
+      "volume": 11.446,
+      "weight": 0.0142,
+      "features": {
+        "Inner wall": {
+          "time": 2.878,
+          "volume": 5.641,
+          "weight": 0.007
+        },
+        "Outer wall": {
+          "time": 3.034,
+          "volume": 5.804,
+          "weight": 0.0072
+        }
+      }
+    },
+    {
+      "z": 9.4,
+      "time": 8.011,
+      "travel_time": 1.801,
+      "volume": 11.446,
+      "weight": 0.0142,
+      "features": {
+        "Inner wall": {
+          "time": 2.878,
+          "volume": 5.641,
+          "weight": 0.007
+        },
+        "Outer wall": {
+          "time": 3.034,
+          "volume": 5.804,
+          "weight": 0.0072
+        }
+      }
+    },
+    {
+      "z": 9.6,
+      "time": 8.011,
+      "travel_time": 1.801,
+      "volume": 11.446,
+      "weight": 0.0142,
+      "features": {
+        "Inner wall": {
+          "time": 2.878,
+          "volume": 5.641,
+          "weight": 0.007
+        },
+        "Outer wall": {
+          "time": 3.034,
+          "volume": 5.804,
+          "weight": 0.0072
+        }
+      }
+    },
+    {
+      "z": 9.8,
+      "time": 8.011,
+      "travel_time": 1.801,
+      "volume": 11.446,
+      "weight": 0.0142,
+      "features": {
+        "Inner wall": {
+          "time": 2.878,
+          "volume": 5.641,
+          "weight": 0.007
+        },
+        "Outer wall": {
+          "time": 3.034,
+          "volume": 5.804,
+          "weight": 0.0072
+        }
+      }
+    },
+    {
+      "z": 10.0,
+      "time": 8.011,
+      "travel_time": 1.801,
+      "volume": 11.446,
+      "weight": 0.0142,
+      "features": {
+        "Inner wall": {
+          "time": 2.878,
+          "volume": 5.641,
+          "weight": 0.007
+        },
+        "Outer wall": {
+          "time": 3.034,
+          "volume": 5.804,
+          "weight": 0.0072
+        }
+      }
+    },
+    {
+      "z": 10.2,
+      "time": 8.013,
+      "travel_time": 1.802,
+      "volume": 11.446,
+      "weight": 0.0142,
+      "features": {
+        "Inner wall": {
+          "time": 2.878,
+          "volume": 5.641,
+          "weight": 0.007
+        },
+        "Outer wall": {
+          "time": 3.034,
+          "volume": 5.804,
+          "weight": 0.0072
+        }
+      }
+    },
+    {
+      "z": 10.4,
+      "time": 13.036,
+      "travel_time": 6.784,
+      "volume": 11.446,
+      "weight": 0.0142,
+      "features": {
+        "Inner wall": {
+          "time": 2.878,
+          "volume": 5.641,
+          "weight": 0.007
+        },
+        "Outer wall": {
+          "time": 3.034,
+          "volume": 5.804,
+          "weight": 0.0072
+        }
+      }
+    }
+  ],
+  "objects": [
+    {
+      "name": "base_print.stl",
+      "instance": 0,
+      "volume": 18465.105,
+      "weight": 22.8967,
+      "support_volume": 0.0,
+      "support_weight": 0.0
+    }
+  ]
+}

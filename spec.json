@@ -1,0 +1,212 @@
+[
+ {
+  "name": "base bbox dx",
+  "kind": "bbox_dim",
+  "a": "base.step#0",
+  "axis": "x",
+  "target": 87.58,
+  "tol": 0.05,
+  "op": "=="
+ },
+ {
+  "name": "base bbox dy",
+  "kind": "bbox_dim",
+  "a": "base.step#0",
+  "axis": "y",
+  "target": 97.543,
+  "tol": 0.05,
+  "op": "=="
+ },
+ {
+  "name": "base bbox dz",
+  "kind": "bbox_dim",
+  "a": "base.step#0",
+  "axis": "z",
+  "target": 10.4,
+  "tol": 0.05,
+  "op": "=="
+ },
+ {
+  "name": "base min wall",
+  "kind": "min_wall",
+  "a": "base.stl",
+  "target": 1.6,
+  "tol": 0.01,
+  "op": ">="
+ },
+ {
+  "name": "lid bbox dx",
+  "kind": "bbox_dim",
+  "a": "lid.step#0",
+  "axis": "x",
+  "target": 87.58,
+  "tol": 0.05,
+  "op": "=="
+ },
+ {
+  "name": "lid bbox dy",
+  "kind": "bbox_dim",
+  "a": "lid.step#0",
+  "axis": "y",
+  "target": 97.543,
+  "tol": 0.05,
+  "op": "=="
+ },
+ {
+  "name": "lid bbox dz",
+  "kind": "bbox_dim",
+  "a": "lid.step#0",
+  "axis": "z",
+  "target": 11.545,
+  "tol": 0.05,
+  "op": "=="
+ },
+ {
+  "name": "lid min wall",
+  "kind": "min_wall",
+  "a": "lid.stl",
+  "target": 1.6,
+  "tol": 0.01,
+  "op": ">="
+ },
+ {
+  "name": "heat-set insert holes (ruthex RX-M3x5.7)",
+  "kind": "hole_diameter",
+  "a": "base.step#0",
+  "target": 4.0,
+  "tol": 0.02,
+  "op": "==",
+  "count": 6,
+  "depth_min": 6.7
+ },
+ {
+  "name": "M3 clearance holes in lid",
+  "kind": "hole_diameter",
+  "a": "lid.step#0",
+  "target": 3.4,
+  "tol": 0.02,
+  "op": "==",
+  "count": 4
+ },
+ {
+  "name": "RESET pin hole",
+  "kind": "hole_diameter",
+  "a": "lid.step#0",
+  "target": 2.2,
+  "tol": 0.02,
+  "op": "==",
+  "count": 1,
+  "at": [
+   31.0,
+   -35.0
+  ]
+ },
+ {
+  "name": "CHG LED hole",
+  "kind": "hole_diameter",
+  "a": "lid.step#0",
+  "target": 2.0,
+  "tol": 0.02,
+  "op": "==",
+  "count": 1,
+  "at": [
+   3.0,
+   -22.0
+  ]
+ },
+ {
+  "name": "board does not penetrate base.step#0",
+  "kind": "min_distance",
+  "a": "board",
+  "b": "base.step#0",
+  "target": 0.0,
+  "tol": 0.0,
+  "op": ">=",
+  "note": "contact is by design: board sits on base standoffs, lid bosses clamp it at H1/H3"
+ },
+ {
+  "name": "board does not penetrate lid.step#0",
+  "kind": "min_distance",
+  "a": "board",
+  "b": "lid.step#0",
+  "target": 0.0,
+  "tol": 0.0,
+  "op": ">=",
+  "note": "contact is by design: board sits on base standoffs, lid bosses clamp it at H1/H3"
+ },
+ {
+  "name": "board edge to inner side walls",
+  "kind": "min_distance",
+  "a": "board PCB substrate",
+  "b": "side walls only (no bosses)",
+  "target": 0.5,
+  "tol": 0.0,
+  "op": ">=",
+  "measured": 0.5
+ },
+ {
+  "name": "display window = GDEY029T94 viewing area",
+  "kind": "contains",
+  "a": "lid.step#0 window void at z plate_bot+0.1..0.5",
+  "target": [
+   41.254,
+   -36.803,
+   71.11,
+   30.893
+  ],
+  "tol": 0.1,
+  "op": "==",
+  "axis": "xy rectangle [x0, y0, x1, y1]"
+ },
+ {
+  "name": "USB-C opening centre (x, z) = J1",
+  "kind": "distance",
+  "a": "lid USB opening centre",
+  "b": "J1 F.Fab centre x, board top + 3.16/2",
+  "target": [
+   14.0,
+   3.125
+  ],
+  "tol": 0.1,
+  "op": "==",
+  "size": [
+   9.0,
+   3.2
+  ]
+ },
+ {
+  "name": "Qwiic opening centre (y, z) = J3 STEP body",
+  "kind": "distance",
+  "a": "lid Qwiic opening centre",
+  "b": "J3 3D body centre",
+  "target": [
+   -16.0,
+   3.075
+  ],
+  "tol": 0.1,
+  "op": "==",
+  "size": [
+   7.6,
+   3.4
+  ]
+ },
+ {
+  "name": "USB-C plug shell envelope 8.4 x 2.6 clears lid",
+  "kind": "min_distance",
+  "a": "box 8.4x2.6 on J1 axis",
+  "b": "lid.step#0",
+  "target": 0.0,
+  "tol": 0.0,
+  "op": ">",
+  "measured": 0.21715728752537913
+ },
+ {
+  "name": "reset tube clears the button at rest",
+  "kind": "distance",
+  "a": "tube bottom",
+  "b": "SW1 top (1.5 mm)",
+  "target": 0.0,
+  "op": ">",
+  "measured": 0.8999999999999999
+ }
+]
