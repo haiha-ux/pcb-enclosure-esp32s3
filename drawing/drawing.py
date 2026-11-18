@@ -124,7 +124,7 @@ def lid_dims(msp, M, lo, hi, L):
     dim(msp, T(va[2], va[1]), T(va[2], va[3]), base=T(hi[0] + 8, 0), angle=90)
     dim(msp, T(lo[0], va[3]), T(va[0], va[3]), base=T(0, hi[1] + 16))
     dim(msp, T(va[2], hi[1]), T(va[2], va[3]), base=T(hi[0] + 16, 0), angle=90)
-    for k, txt, tx in (("reset", f"RESET pin %%c{P.RESET_PIN_D} THRU, guide tube", -40), ("led", f"CHG LED light pipe %%c{P.LED_BORE_D} THRU (rod %%c{P.LED_PIPE_D})", -40)):
+    for k, txt, tx in (("reset", f"RESET pin %%c{P.RESET_PIN_D} THRU, guide tube", -40), ("led", f"CHG LED light pipe %%c{P.LED_BORE_D} THRU (rod %%c{P.LED_PIPE_D}, glued flush)", -40)):
         o = L["openings"][k]
         tip = T(o["x"], o["y"])
         knee = (T(hi[0], 0)[0] + 25, tip[1] + (10 if k == "led" else -6))
@@ -139,13 +139,13 @@ def lid_dims(msp, M, lo, hi, L):
     zb = L["z"]["split"]
     dim(msp, F(u["x"] - u["w"] / 2, zb), F(u["x"] + u["w"] / 2, zb), base=F(0, lo[2] - 10))
     dim(msp, F(lo[0], hi[2]), F(u["x"], hi[2]), base=F(0, hi[2] + 10))
-    dim(msp, F(u["x"] + u["w"] / 2, zb), F(u["x"] + u["w"] / 2, u["z"] + u["h"] / 2), base=F(u["x"] + u["w"] / 2 + 8, 0), angle=90)
+    dim(msp, F(u["x"] + u["w"] / 2, zb), F(u["x"] + u["w"] / 2, u["z"] + u["h"] / 2), base=F(u["x"] + u["w"] / 2 + 3, 0), angle=90)
     dim(msp, F(lo[0], lo[2]), F(lo[0], hi[2]), base=F(lo[0] - 10, 0), angle=90)
     msp.add_text("USB-C pocket through the wall, open to the parting line", height=2.5,
                  dxfattribs={"layer": "TEXT", "style": "ISO"}).set_placement(F(lo[0], lo[2] - 20))
     q = L["openings"]["qwiic"]
     dim(msp, R(q["y"] - q["w"] / 2, q["z"] - q["h"] / 2), R(q["y"] + q["w"] / 2, q["z"] - q["h"] / 2), base=R(0, lo[2] - 10))
-    dim(msp, R(q["y"] + q["w"] / 2, q["z"] - q["h"] / 2), R(q["y"] + q["w"] / 2, q["z"] + q["h"] / 2), base=R(q["y"] + q["w"] / 2 + 8, 0), angle=90)
+    dim(msp, R(q["y"] + q["w"] / 2, q["z"] - q["h"] / 2), R(q["y"] + q["w"] / 2, q["z"] + q["h"] / 2), base=R(hi[1] + 8, 0), angle=90)
     dim(msp, R(lo[1], hi[2]), R(q["y"], hi[2]), base=R(0, hi[2] + 10))
 
 def base_dims(msp, M, lo, hi, L):
@@ -174,18 +174,19 @@ def main():
               "Opening positions match KiCad footprint data (CAD check, verify/report.json)."]
     lid = import_step(OUT / "lid.step")
     base = import_step(OUT / "base.step")
-    place = {"TOP": (55, 140), "FRONT (from -Y)": (55, 72), "RIGHT (from +X)": (190, 72)}
+    place = {"TOP": (55, 152), "FRONT (from -Y)": (55, 72), "RIGHT (from +X)": (190, 72)}
     sheet("lid", lid, L, place, lid_dims)
     sheet("base", base, L, place, base_dims)
     # title blocks + notes are added in a second pass so frame() stays independent of the views
     for part, title, notes in (("lid", "ESP32-S3 e-paper enclosure - LID", common + [
             "Print upside down (top plate on the bed). Window lip chamfer 0.4 x 45.",
-            "Locating lip 1.7 wide, 2.0 deep, 0.2 clearance inside the base wall.",
+            "Locating lip 1.7 wide, 2.0 deep, 0.2 clearance, on the back and both sides (front: screws H1, H3).",
             "Panel GDEY029T94: tape on the plate underside, NOT over the 4.5 mm FPC-side bonding strip (0.3 relief)."]),
             ("base", "ESP32-S3 e-paper enclosure - BASE", common + [
             "Print as shown (floor on the bed).",
             "Battery pocket ribs for a 50 x 34 x 5 mm cell (assumed 503450, 1000 mAh).",
-            "Screws ISO 7045: M3x6 (2 pcs) at H2, H4; M3x14 (2 pcs) through lid at H1, H3; M3x12 (2 pcs) at lid corners.",
+            "Screws ISO 7045: M3x6 (2 pcs) at H2, H4; M3x14 (2 pcs) through lid at H1, H3;",
+            "M3x12 (2 pcs) at the lid corners.",
             "Print a test coupon of one insert boss first: insert hole diameter depends on the printer."])):
         doc = ezdxf.readfile(DWG / f"{part}.dxf")
         frame(doc.modelspace(), title, part, notes)

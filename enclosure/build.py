@@ -12,7 +12,7 @@ from pathlib import Path
 from build123d import (Align, Box, Compound, Cylinder, Location, Pos, Rectangle,
                        RectangleRounded, SlotCenterToCenter, Solid, Vector, export_step,
                        export_stl, extrude, import_step, offset, Kind, Mesher, Plane,
-                       Wire, Line, CenterArc, sweep, Face, chamfer, Axis, Rot)
+                       Wire, Line, CenterArc, sweep, Face, chamfer, Axis, Rot, Polygon)
 
 sys.path.insert(0, str(Path(__file__).parent))
 import board as B
@@ -124,6 +124,29 @@ def outlines(L):
     return inner, outer
 
 
+def shoulder_wedges(inner, w, h, z0):
+    """50 deg sloped shoulder along every straight edge of the interior outline.
+    One prism per edge (a tapered extrude of the whole ring left stray faces at the concave corners)."""
+    wire = inner.faces()[0].outer_wire()
+    pts = [(v.X, v.Y) for v in wire.vertices()]
+    area2 = sum(x0 * y1 - x1 * y0 for (x0, y0), (x1, y1) in zip(pts, pts[1:] + pts[:1]))
+    edges = [(e.start_point(), e.end_point()) for e in wire.order_edges()]
+    top = w - h * math.tan(math.radians(40))
+    out = None
+    for a_, b_ in edges:
+        d = (b_ - a_)
+        ln = d.length
+        d = d / ln
+        n = Vector(-d.Y, d.X, 0) if area2 > 0 else Vector(d.Y, -d.X, 0)    # toward the interior
+        zd = n.cross(Vector(0, 0, 1))                      # gives local y = +Z, so the profile is never mirrored
+        start = (a_ - d * w) if zd.dot(d) > 0 else (b_ + d * w)
+        pl = Plane(origin=start + Vector(0, 0, z0), x_dir=n, z_dir=zd)
+        prof = pl * Polygon((-0.3, 0), (w, 0), (top, h), (-0.3, h), align=None)
+        wdg = extrude(prof, ln + 2 * w)
+        out = wdg if out is None else out + wdg
+    return out
+
+
 def build(L):
     inner, outer = outlines(L)
     z = L["z"]
@@ -202,7 +225,6 @@ def build(L):
     # light pipe guide for the CHG LED
     dx, dy = L["refs"]["D2"]
     pipe_bot = L["led_top"] + P.LED_PIPE_GAP
-    lid += cyl(dx, dy, pipe_bot, z["plate_bot"] + 0.01, P.LED_BORE_D + 2 * P.RIB)
     # reset pin guide tube
     sx, sy = L["refs"]["SW1"]
     tube_bot = bd["zt"] + P.H_TACT + P.RESET_TUBE_BOTTOM_GAP
@@ -213,7 +235,7 @@ def build(L):
     for (x, y) in L["corners"]:
         lid -= cyl(x, y, z["corner_joint"] - 1, z["top"] + 1, P.CLR_HOLE_M3)
     lid -= cyl(sx, sy, tube_bot - 1, z["top"] + 1, P.RESET_PIN_D)
-    lid -= cyl(dx, dy, pipe_bot - 1, z["top"] + 1, P.LED_BORE_D)
+    lid -= cyl(dx, dy, z["plate_bot"] - 1, z["top"] + 1, P.LED_BORE_D)   # rod held in the plate, glued flush with the top
     va = L["va"]
     win = box(va[0], va[1], z["plate_bot"] - 1, va[2], va[3], z["top"] + 1)
     k = P.WINDOW_CHAMFER
@@ -236,15 +258,21 @@ def build(L):
     # locating lip: hangs from the lid inside the base wall all round, cut back wherever base parts sit
     lip_ring = offset(inner, -P.LIP_CLR) - offset(inner, -(P.LIP_CLR + P.LIP_T))
     lip = prism(lip_ring, z["split"] - P.LIP_H, z["split"] + 0.01)
-    lip += prism(inner - offset(inner, -(P.LIP_CLR + P.LIP_T)), z["split"], z["split"] + 1.7)
+    w_ = P.LIP_CLR + P.LIP_T                                  # shoulder width from the wall
+    h_ = min((w_ - 0.1) / math.tan(math.radians(40)),         # 40 deg draft = 50 deg from horizontal when printed
+             bd["zb"] - 0.1 - (z["split"] + P.LIP_SHOULDER_STRAIGHT))   # and stay 0.1 below the board
+    lip += prism(inner - offset(inner, -w_), z["split"], z["split"] + P.LIP_SHOULDER_STRAIGHT + 0.01)   # straight part keeps the ledge >= 1.6 thick
+    if P.LIP_SHOULDER_SLOPE:   # off: with the sloped wedges OCC's boolean common reports false interference with the board
+        lip += shoulder_wedges(inner, w_, h_, z["split"] + P.LIP_SHOULDER_STRAIGHT)
     L["usb_tmp"] = {"x": jx, "z": jz}
-    feats.append(box(jx - rw / 2 - 2, I["y0"] - 1, z["split"] - P.LIP_H - 1, jx + rw / 2 + 2, I["y0"] + 2.5, z["split"] + 2))
-    feats.append(box(*L["battery"]))
+    feats.append(box(jx - rw / 2 - 2, I["y0"] - P.WALL - 1, z["split"] - P.LIP_H - 1, jx + rw / 2 + 2, I["y0"] + 2.5, z["split"] + 3))
+    bat = L["battery"]                                       # cells vary +-1 mm: cut the lip 1 mm clear of the pocket
+    feats.append(box(bat[0] - 0.7, bat[1] - 0.7, bat[2], bat[3] + 0.7, bat[4] + 0.7, bat[5]))
     bx0_, by0_, bx1_, _ = I["bulge"]
-    feats.append(box(bx0_ - 2.0, by0_ - 1.0, z["split"] - P.LIP_H - 1, bx1_ + 2.0, I["y0"] + 2.5, z["split"] + 2))
+    feats.append(box(bx0_ - 2.0, by0_ - P.WALL - 1, z["split"] - P.LIP_H - 1, bx1_ + 2.0, I["y0"] + 2.5, z["split"] + 3))
     for f_ in feats + list((base - base_walls).solids()):
         b_ = f_.bounding_box()
-        lip -= box(b_.min.X - 0.3, b_.min.Y - 0.3, z["split"] - P.LIP_H - 1, b_.max.X + 0.3, b_.max.Y + 0.3, z["split"] + 2)  # full height: no thin leftovers
+        lip -= box(b_.min.X - 0.3, b_.min.Y - 0.3, z["split"] - P.LIP_H - 1, b_.max.X + 0.3, b_.max.Y + 0.3, z["split"] + 3)  # full height: no thin leftovers
     lid += lip
     L["lip_volume"] = lip.volume
     L["openings"] = {"usb": {"x": jx, "z": jz, "w": ow, "h": oh},
@@ -314,7 +342,7 @@ def main():
     panel = box(pn[0], pn[1], pn[2], pn[3], pn[4], pn[2] + P.PANEL_TFT_T)
     panel += box(pn[3] - PS - PW, pn[4] - PE - PL, pn[2] + P.PANEL_TFT_T - 0.01, pn[3] - PS, pn[4] - PE, pn[5])
     led = L["openings"]["led"]
-    rod = cyl(led["x"], led["y"], led["pipe_bottom"], L["z"]["top"], P.LED_PIPE_D)
+    rod = cyl(led["x"], led["y"], led["pipe_bottom"], L["z"]["top"], P.LED_PIPE_D)   # cut to length, flush with the lid top
     rod.label = "light_pipe_2mm_PMMA"
     fpc = fpc_solid(L)
     bd = L["board"]

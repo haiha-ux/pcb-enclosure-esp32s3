@@ -68,6 +68,9 @@ def common_volume(a, b):
 def min_wall(stl_path):
     """Local wall thickness: ray from every triangle centroid inward along -normal to the first hit."""
     m = trimesh.load(stl_path)
+    # sample densely: split every triangle until edges are <= 0.5 mm (centroids alone missed the window lip in REV2)
+    v, f = trimesh.remesh.subdivide_to_size(m.vertices, m.faces, max_edge=0.5)
+    m = trimesh.Trimesh(v, f, process=False)
     eps = 1e-4
     origins = m.triangles_center - m.face_normals * eps
     dirs = -m.face_normals
@@ -178,7 +181,7 @@ def main():
         raise SystemExit("check_solids.step solid count changed")
     board_pcb = [c for c in board.children if c.label == "esp32s3_epaper_PCB"][0]
     base, lid = parts["base"], parts["lid"]
-    others = {"board": board, "panel": extra["panel"], "fpc": extra["fpc"], "battery": extra["battery"]}
+    others = {"board": board, "panel": extra["panel"], "fpc": extra["fpc"], "battery": extra["battery"], "light_pipe": extra["light_pipe"]}
     others.update({k: v for k, v in extra.items() if k.startswith(("proxy_", "screw_head_", "mating_"))})
     worst = 0.0
     for pn, p in (("base.step#0", base), ("lid.step#0", lid)):
@@ -205,6 +208,11 @@ def main():
         report[f"pair.{a}|{b_}.common_volume"] = v
         report[f"pair.{a}|{b_}.min_clearance"] = d
         check(f"no interference {a} | {b_}", v < 1e-3, common_volume=v, min_clearance=d)
+    blo, bhi = bb(board)
+    report.update({"board.step#0.bbox_dx": bhi[0] - blo[0], "board.step#0.bbox_dy": bhi[1] - blo[1], "board.step#0.bbox_dz": bhi[2] - blo[2],
+                   "board.step#0.volume": board.volume, "board.step#0.solid_count": len(board.solids()),
+                   "pair.base.step#0|board.step#0.min_clearance": base.distance_to(board),
+                   "pair.lid.step#0|board.step#0.min_clearance": lid.distance_to(board)})
     walls = extra["base_walls"].fuse(extra["lid_walls"])
     dw = board_pcb.distance_to(walls)
     report["pair.board|walls.min_clearance"] = dw
@@ -261,7 +269,7 @@ def main():
     led = L["openings"]["led"]
     report["led.pipe_bottom_to_led_top"] = led["pipe_bottom"] - L["led_top"]
     report["led.light_pipe_length"] = z["top"] - led["pipe_bottom"]
-    check("light-pipe guide clears the LED", report["led.pipe_bottom_to_led_top"] > 0, gap=report["led.pipe_bottom_to_led_top"])
+    check("light-pipe rod (cut flush with the lid top) stops above the LED", report["led.pipe_bottom_to_led_top"] > 0, gap=report["led.pipe_bottom_to_led_top"])
     br = box(I["x1"] - 12, I["y0"] - 0.1, z["split"] - P.LIP_H, I["x1"], I["y0"] + 12, z["split"])
     lipv = sum(s_.volume for s_ in (br & lid).solids()) if (br & lid) is not None else 0.0
     report["lid.lip_volume_bottom_right_corner"] = lipv
@@ -278,6 +286,7 @@ def main():
     for n, flip in (("base", False), ("lid", True)):
         mw, p1, where, miss = min_wall(OUT / f"{n}.stl")
         report[f"{n}.stl.min_wall"], report[f"{n}.stl.wall_p1"], report[f"{n}.stl.min_wall_at"] = mw, p1, where
+        report[f"{n}.step#0.min_wall"] = mw
         check(f"{n}: wall >= 1.6 everywhere (ray method)", mw >= 1.6 - 0.01 and miss == 0, min_wall=mw, at=where, rays_missed=miss)
         g, at = min_air_gap(OUT / f"{n}.stl")
         report[f"{n}.stl.min_slot"], report[f"{n}.stl.min_slot_at"] = g, at

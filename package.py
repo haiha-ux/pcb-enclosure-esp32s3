@@ -68,6 +68,9 @@ def main():
         target=0.0, tol=0.0, op=">", measured=R["usb.plug_shell_to_lid"])
     add(name="reset tube clears the button at rest", kind="distance", a="tube bottom", b="SW1 top (1.5 mm)", target=0.0, op=">",
         measured=R["reset.tube_bottom_to_button_top"])
+    for it in s:
+        if "a" in it:
+            it.setdefault("id", it["a"])
     (ROOT / "spec.json").write_text(json.dumps(s, indent=1))
     shutil.copy2(ROOT / "verify" / "report.json", D.parent / "report.json")
     print("deliver/ and spec.json written:", len(s), "spec items")

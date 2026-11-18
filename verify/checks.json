@@ -20,18 +20,18 @@
   "name": "lid: one valid solid, volume > 0",
   "pass": true,
   "solids": 1,
-  "volume": 21562.36340081871
+  "volume": 21477.979097479314
  },
  {
   "name": "lid: STEP re-import matches build (rel <= 1e-6)",
   "pass": true,
-  "rel_volume": 4.285460734634725e-14,
+  "rel_volume": 4.8781959032888175e-14,
   "rel_bbox": 4.415930333438997e-15
  },
  {
   "name": "lid: STL watertight, volume within 0.5 % of STEP",
   "pass": true,
-  "stl_volume": 21562.129607645318
+  "stl_volume": 21477.78211955031
  },
  {
   "name": "no interference board | base.step#0",
@@ -56,6 +56,12 @@
   "pass": true,
   "common_volume": 0.0,
   "min_clearance": 0.0
+ },
+ {
+  "name": "no interference light_pipe | base.step#0",
+  "pass": true,
+  "common_volume": 0.0,
+  "min_clearance": 8.163107181722502
  },
  {
   "name": "no interference proxy_J1_USB-C | base.step#0",
@@ -169,7 +175,13 @@
   "name": "no interference battery | lid.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 0.29999999999999716
+  "min_clearance": 0.5
+ },
+ {
+  "name": "no interference light_pipe | lid.step#0",
+  "pass": true,
+  "common_volume": 0.0,
+  "min_clearance": 0.0999999999999969
  },
  {
   "name": "no interference proxy_J1_USB-C | lid.step#0",
@@ -181,7 +193,7 @@
   "name": "no interference proxy_J2_JST-PH | lid.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 0.3000000000000007
+  "min_clearance": 0.5
  },
  {
   "name": "no interference proxy_J4_FPC | lid.step#0",
@@ -205,7 +217,7 @@
   "name": "no interference screw_head_H2 | lid.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 2.4618945956315903
+  "min_clearance": 2.4544092975704017
  },
  {
   "name": "no interference screw_head_H4 | lid.step#0",
@@ -382,14 +394,14 @@
   "d": 2.200000000000003
  },
  {
-  "name": "led hole over D2 (+-0.1), d = 2.1",
+  "name": "led hole over D2 (+-0.1), d = 2.2",
   "pass": true,
   "dx": 0.0,
   "dy": 0.0,
-  "d": 2.0999999999999996
+  "d": 2.1999999999999997
  },
  {
-  "name": "light-pipe guide clears the LED",
+  "name": "light-pipe rod (cut flush with the lid top) stops above the LED",
   "pass": true,
   "gap": 0.5
  },
@@ -432,22 +444,22 @@
  {
   "name": "lid: wall >= 1.6 everywhere (ray method)",
   "pass": true,
-  "min_wall": 1.6993693520976325,
+  "min_wall": 1.6993693065315578,
   "at": [
-   31.66815694173177,
-   -32.28168614705404,
-   5.144999980926514
+   31.2458811601003,
+   -33.927859942118324,
+   4.178333272536595
   ],
   "rays_missed": 0
  },
  {
   "name": "lid: no slot narrower than 0.8 mm (two extrusion lines)",
   "pass": true,
-  "min_slot": 2.099246126330445,
+  "min_slot": 2.1992136101285276,
   "at": [
-   3.7075629234313965,
-   -21.224600474039715,
-   5.311666647593181
+   31.43556849161784,
+   -33.99024327596029,
+   5.811666647593181
   ]
  },
  {
@@ -462,8 +474,8 @@
   "name": "lid: OrcaSlicer slices with no error/warning",
   "pass": true,
   "rc": 0,
-  "time_s": 10551.64,
-  "weight_g": 23.6184,
+  "time_s": 10483.554,
+  "weight_g": 23.5166,
   "warnings": []
  },
  {

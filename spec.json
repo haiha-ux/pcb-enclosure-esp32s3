@@ -6,7 +6,8 @@
   "axis": "x",
   "target": 87.58,
   "tol": 0.05,
-  "op": "=="
+  "op": "==",
+  "id": "base.step#0"
  },
  {
   "name": "base bbox dy",
@@ -15,7 +16,8 @@
   "axis": "y",
   "target": 96.543,
   "tol": 0.05,
-  "op": "=="
+  "op": "==",
+  "id": "base.step#0"
  },
  {
   "name": "base bbox dz",
@@ -24,7 +26,8 @@
   "axis": "z",
   "target": 10.4,
   "tol": 0.05,
-  "op": "=="
+  "op": "==",
+  "id": "base.step#0"
  },
  {
   "name": "base min wall",
@@ -32,7 +35,8 @@
   "a": "base.stl",
   "target": 1.6,
   "tol": 0.01,
-  "op": ">="
+  "op": ">=",
+  "id": "base.stl"
  },
  {
   "name": "lid bbox dx",
@@ -41,7 +45,8 @@
   "axis": "x",
   "target": 87.58,
   "tol": 0.05,
-  "op": "=="
+  "op": "==",
+  "id": "lid.step#0"
  },
  {
   "name": "lid bbox dy",
@@ -50,7 +55,8 @@
   "axis": "y",
   "target": 96.543,
   "tol": 0.05,
-  "op": "=="
+  "op": "==",
+  "id": "lid.step#0"
  },
  {
   "name": "lid bbox dz",
@@ -59,7 +65,8 @@
   "axis": "z",
   "target": 13.545,
   "tol": 0.05,
-  "op": "=="
+  "op": "==",
+  "id": "lid.step#0"
  },
  {
   "name": "lid min wall",
@@ -67,7 +74,8 @@
   "a": "lid.stl",
   "target": 1.6,
   "tol": 0.01,
-  "op": ">="
+  "op": ">=",
+  "id": "lid.stl"
  },
  {
   "name": "heat-set insert holes (ruthex RX-M3x5.7)",
@@ -77,7 +85,8 @@
   "tol": 0.02,
   "op": "==",
   "count": 6,
-  "depth_min": 6.7
+  "depth_min": 6.7,
+  "id": "base.step#0"
  },
  {
   "name": "M3 clearance holes in lid",
@@ -86,7 +95,8 @@
   "target": 3.4,
   "tol": 0.02,
   "op": "==",
-  "count": 4
+  "count": 4,
+  "id": "lid.step#0"
  },
  {
   "name": "RESET pin hole",
@@ -99,20 +109,22 @@
   "at": [
    31.0,
    -35.0
-  ]
+  ],
+  "id": "lid.step#0"
  },
  {
   "name": "CHG LED light-pipe bore (2 mm PMMA rod)",
   "kind": "hole_diameter",
   "a": "lid.step#0",
-  "target": 2.1,
+  "target": 2.2,
   "tol": 0.02,
   "op": "==",
   "count": 1,
   "at": [
    3.0,
    -22.0
-  ]
+  ],
+  "id": "lid.step#0"
  },
  {
   "name": "board does not penetrate base.step#0",
@@ -122,7 +134,8 @@
   "target": 0.0,
   "tol": 0.0,
   "op": ">=",
-  "note": "contact is by design: board sits on base standoffs, lid bosses clamp it at H1/H3"
+  "note": "contact is by design: board sits on base standoffs, lid bosses clamp it at H1/H3",
+  "id": "board"
  },
  {
   "name": "board does not penetrate lid.step#0",
@@ -132,7 +145,8 @@
   "target": 0.0,
   "tol": 0.0,
   "op": ">=",
-  "note": "contact is by design: board sits on base standoffs, lid bosses clamp it at H1/H3"
+  "note": "contact is by design: board sits on base standoffs, lid bosses clamp it at H1/H3",
+  "id": "board"
  },
  {
   "name": "board edge to inner side walls",
@@ -142,7 +156,8 @@
   "target": 0.5,
   "tol": 0.0,
   "op": ">=",
-  "measured": 0.5
+  "measured": 0.5,
+  "id": "board PCB substrate"
  },
  {
   "name": "display window = GDEY029T94 viewing area",
@@ -156,7 +171,8 @@
   ],
   "tol": 0.1,
   "op": "==",
-  "axis": "xy rectangle [x0, y0, x1, y1]"
+  "axis": "xy rectangle [x0, y0, x1, y1]",
+  "id": "lid.step#0 window void at z plate_bot+0.1..0.5"
  },
  {
   "name": "USB-C pocket centre x = J1 F.Fab centre",
@@ -170,7 +186,8 @@
    13.45,
    "open from parting line to z",
    6.925
-  ]
+  ],
+  "id": "lid USB pocket centre x"
  },
  {
   "name": "USB-C overmold can reach the receptacle mouth",
@@ -180,7 +197,8 @@
   "target": 0.35,
   "op": "<=",
   "measured": 0.10000000000000142,
-  "note": "overmold face to mating datum = 6.2 + gap <= 6.5"
+  "note": "overmold face to mating datum = 6.2 + gap <= 6.5",
+  "id": "first lid material in the 12.85x7.0 overmold footprint"
  },
  {
   "name": "Qwiic opening centre (y, z) = J3 STEP body",
@@ -196,7 +214,8 @@
   "size": [
    7.6,
    3.4
-  ]
+  ],
+  "id": "lid Qwiic opening centre"
  },
  {
   "name": "USB-C plug shell envelope 8.4 x 2.6 clears lid",
@@ -206,7 +225,8 @@
   "target": 0.0,
   "tol": 0.0,
   "op": ">",
-  "measured": 2.5495097567963922
+  "measured": 2.5495097567963922,
+  "id": "box 8.4x2.6 on J1 axis"
  },
  {
   "name": "reset tube clears the button at rest",
@@ -215,6 +235,7 @@
   "b": "SW1 top (1.5 mm)",
   "target": 0.0,
   "op": ">",
-  "measured": 0.8999999999999999
+  "measured": 0.8999999999999999,
+  "id": "tube bottom"
  }
 ]

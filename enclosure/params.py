@@ -63,6 +63,8 @@ SCREW_HEAD_K = 2.4      # ISO 7045 M3 pan head k max
 BATT = (50.0, 34.0, 5.0)
 BATT_CLR = 0.5
 LIP_T, LIP_CLR, LIP_H = 1.7, 0.2, 2.0   # lid locating lip inside the base wall
+LIP_SHOULDER_STRAIGHT = 1.7             # flat 1.9 mm shoulder that ties the lip to the wall (printed as a short overhang)
+LIP_SHOULDER_SLOPE = False              # sloped variant exists (shoulder_wedges) but trips OCC booleans, see README
 PANEL_TOP_LAYER = (74.50, 33.66, 0.80, 1.52)  # PS length, width, from far end, from VA side (datasheet p.7)
 PANEL_TFT_T = 0.60      # assumption: split of the 1.2 mm stack
 BONDING_STRIP = 4.5     # FPC-side strip kept clear of tape and lid (IC bonding area)
@@ -77,9 +79,12 @@ QWIIC_OPEN_CLR = 0.30
 RESET_PIN_D = 2.2       # paper-clip / pin hole over the RESET button
 RESET_TUBE_BOTTOM_GAP = 0.9
 LED_PIPE_D = 2.0        # 2 mm PMMA rod as light pipe
-LED_BORE_D = 2.1
+LED_BORE_D = 2.2        # FDM holes print ~0.1-0.2 small: snug fit for the 2.0 rod, fixed with a drop of CA glue
+LED_STOP_D = 1.6        # narrower bore at the bottom: the rod stops on it, light still passes
+LED_STOP_H = 1.7        # stop ring 1.7 tall: 0.1 mm margin over the 1.6 mm wall rule
+LED_J2_GAP = 0.5        # guide is cut open on the J2 side to keep this gap
 LED_PIPE_GAP = 0.5      # rod end above the LED
-WINDOW_CHAMFER = 0.4      # plate 2.0 - 0.4 = 1.6 left at the lip
+WINDOW_CHAMFER = 0.3      # plate 2.0 - 0.3 = 1.7 left at the lip (0.1 mm margin over the 1.6 rule)
 
 SOURCES = {
     "GDEY029T94": "Good Display GDEY029T94 datasheet p.7 (mechanical drawing), https://www.laskakit.cz/user/related_files/gdey029t94.pdf",
