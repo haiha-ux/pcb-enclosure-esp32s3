@@ -3,35 +3,35 @@
   "name": "base: one valid solid, volume > 0",
   "pass": true,
   "solids": 1,
-  "volume": 24302.682736274903
+  "volume": 24045.38218926311
  },
  {
   "name": "base: STEP re-import matches build (rel <= 1e-6)",
   "pass": true,
-  "rel_volume": 2.993890712864847e-16,
-  "rel_bbox": 4.370658555354824e-15
+  "rel_volume": 0.0,
+  "rel_bbox": 4.41593034258714e-15
  },
  {
   "name": "base: STL watertight, volume within 0.5 % of STEP",
   "pass": true,
-  "stl_volume": 24302.130731130743
+  "stl_volume": 24045.06649230566
  },
  {
   "name": "lid: one valid solid, volume > 0",
   "pass": true,
   "solids": 1,
-  "volume": 20430.935023687
+  "volume": 21562.36340081871
  },
  {
   "name": "lid: STEP re-import matches build (rel <= 1e-6)",
   "pass": true,
-  "rel_volume": 3.009252477606709e-14,
-  "rel_bbox": 4.370658546393291e-15
+  "rel_volume": 4.285460734634725e-14,
+  "rel_bbox": 4.415930333438997e-15
  },
  {
   "name": "lid: STL watertight, volume within 0.5 % of STEP",
   "pass": true,
-  "stl_volume": 20430.684274122086
+  "stl_volume": 21562.129607645318
  },
  {
   "name": "no interference board | base.step#0",
@@ -43,13 +43,13 @@
   "name": "no interference panel | base.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 4.355344418067829
+  "min_clearance": 4.35534441806845
  },
  {
   "name": "no interference fpc | base.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 4.685828202284202
+  "min_clearance": 4.672408372563338
  },
  {
   "name": "no interference battery | base.step#0",
@@ -85,7 +85,7 @@
   "name": "no interference proxy_SW2_tact | base.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 7.545
+  "min_clearance": 7.343161784953399
  },
  {
   "name": "no interference screw_head_H2 | base.step#0",
@@ -127,13 +127,13 @@
   "name": "no interference mating_usb_shell | base.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 3.825
+  "min_clearance": 3.1968109108922915
  },
  {
   "name": "no interference mating_usb_overmold | base.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 1.625
+  "min_clearance": 0.375
  },
  {
   "name": "no interference mating_phr2_plug | base.step#0",
@@ -169,19 +169,19 @@
   "name": "no interference battery | lid.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 2.5
+  "min_clearance": 0.29999999999999716
  },
  {
   "name": "no interference proxy_J1_USB-C | lid.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 0.6000000000000014
+  "min_clearance": 2.299652147608416
  },
  {
   "name": "no interference proxy_J2_JST-PH | lid.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 0.5
+  "min_clearance": 0.3000000000000007
  },
  {
   "name": "no interference proxy_J4_FPC | lid.step#0",
@@ -205,7 +205,7 @@
   "name": "no interference screw_head_H2 | lid.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 3.530000000000001
+  "min_clearance": 2.4618945956315903
  },
  {
   "name": "no interference screw_head_H4 | lid.step#0",
@@ -241,13 +241,13 @@
   "name": "no interference mating_usb_shell | lid.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 0.21715728752537913
+  "min_clearance": 2.5495097567963922
  },
  {
   "name": "no interference mating_usb_overmold | lid.step#0",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 0.09999999999999432
+  "min_clearance": 0.2999999999999998
  },
  {
   "name": "no interference mating_phr2_plug | lid.step#0",
@@ -303,6 +303,18 @@
   "min_clearance": 0.965
  },
  {
+  "name": "no interference light_pipe | board",
+  "pass": true,
+  "common_volume": 0.0,
+  "min_clearance": 0.49999999999999956
+ },
+ {
+  "name": "no interference light_pipe | proxy_J2_JST-PH",
+  "pass": true,
+  "common_volume": 0.0,
+  "min_clearance": 2.0500000000000007
+ },
+ {
   "name": "no interference screw_head_H2 | panel",
   "pass": true,
   "common_volume": 0.0,
@@ -318,13 +330,13 @@
   "name": "no interference screw_head_H1 | panel",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 31.593367974940563
+  "min_clearance": 31.6370178746354
  },
  {
   "name": "no interference screw_head_H3 | panel",
   "pass": true,
   "common_volume": 0.0,
-  "min_clearance": 31.593367974940563
+  "min_clearance": 31.6370178746354
  },
  {
   "name": "board to side walls >= CLR_BOARD 0.5",
@@ -332,16 +344,24 @@
   "min_clearance": 0.5
  },
  {
-  "name": "USB-C opening centred on J1 (+-0.1)",
+  "name": "USB-C pocket centred on J1 (+-0.1) and above the overmold top",
   "pass": true,
   "dx": 0.0,
-  "dz": 0.0
+  "pocket_top": 6.925,
+  "overmold_top": 6.625
  },
  {
-  "name": "USB-C plug shell 8.4x2.6 and overmold 12.85x7.0 clear the lid",
+  "name": "USB-C overmold reaches within 0.35 of the mouth (datum <= 6.5)",
   "pass": true,
-  "shell": 0.21715728752537913,
-  "overmold": 0.09999999999999432
+  "gap": 0.10000000000000142,
+  "datum": 6.300000000000002,
+  "stopped_by": "board edge"
+ },
+ {
+  "name": "seated USB-C plug (shell 8.4x2.6, overmold 12.85x7.0) clears the lid",
+  "pass": true,
+  "shell": 2.5495097567963922,
+  "overmold": 0.2999999999999998
  },
  {
   "name": "Qwiic opening centred on J3 (+-0.1)",
@@ -362,11 +382,21 @@
   "d": 2.200000000000003
  },
  {
-  "name": "led hole over D2 (+-0.1), d = 2.0",
+  "name": "led hole over D2 (+-0.1), d = 2.1",
   "pass": true,
   "dx": 0.0,
   "dy": 0.0,
-  "d": 2.0
+  "d": 2.0999999999999996
+ },
+ {
+  "name": "light-pipe guide clears the LED",
+  "pass": true,
+  "gap": 0.5
+ },
+ {
+  "name": "lid has a locating lip at the bottom-right corner",
+  "pass": true,
+  "volume": 41.58199999999974
  },
  {
   "name": "reset tube does not touch the button at rest",
@@ -383,37 +413,57 @@
   "pass": true,
   "min_wall": 1.6648994850158694,
   "at": [
-   2.3334801197052,
-   -46.12253061930338,
+   67.17772420247395,
+   -45.99831899007162,
    -6.735000133514404
   ],
   "rays_missed": 0
  },
  {
+  "name": "base: no slot narrower than 0.8 mm (two extrusion lines)",
+  "pass": true,
+  "min_slot": 1.5999003814697268,
+  "at": [
+   8.800000190734863,
+   -46.5,
+   -5.0
+  ]
+ },
+ {
   "name": "lid: wall >= 1.6 everywhere (ray method)",
   "pass": true,
-  "min_wall": 1.5998984741210904,
+  "min_wall": 1.6993693520976325,
   "at": [
-   8.85032351811727,
-   -50.099998474121094,
-   0.453555703163147
+   31.66815694173177,
+   -32.28168614705404,
+   5.144999980926514
   ],
   "rays_missed": 0
+ },
+ {
+  "name": "lid: no slot narrower than 0.8 mm (two extrusion lines)",
+  "pass": true,
+  "min_slot": 2.099246126330445,
+  "at": [
+   3.7075629234313965,
+   -21.224600474039715,
+   5.311666647593181
+  ]
  },
  {
   "name": "base: OrcaSlicer slices with no error/warning",
   "pass": true,
   "rc": 0,
-  "time_s": 9885.794,
-  "weight_g": 22.9345,
+  "time_s": 9811.913,
+  "weight_g": 22.6004,
   "warnings": []
  },
  {
   "name": "lid: OrcaSlicer slices with no error/warning",
   "pass": true,
   "rc": 0,
-  "time_s": 9738.363,
-  "weight_g": 22.1533,
+  "time_s": 10551.64,
+  "weight_g": 23.6184,
   "warnings": []
  },
  {
@@ -445,14 +495,14 @@
   "below": 1.665
  },
  {
-  "name": "insert@-4.75,37.49: hole 4.0 deep >= 6.7, wall >= 1.6",
+  "name": "insert@-4.75,35.49: hole 4.0 deep >= 6.7, wall >= 1.6",
   "pass": true,
   "d": 4.0,
   "depth": 6.7,
   "below": 3.7
  },
  {
-  "name": "insert@70.83,37.49: hole 4.0 deep >= 6.7, wall >= 1.6",
+  "name": "insert@70.83,35.49: hole 4.0 deep >= 6.7, wall >= 1.6",
   "pass": true,
   "d": 4.0,
   "depth": 6.7,

@@ -6,21 +6,33 @@
   },
   "caught": true,
   "failed_checks": [
-   "USB-C opening centred on J1 (+-0.1)",
    "Qwiic opening centred on J3 (+-0.1)",
    "base: wall >= 1.6 everywhere (ray method)",
    "lid: wall >= 1.6 everywhere (ray method)"
   ]
  },
  {
-  "case": "USB opening 0.2 mm too small",
+  "case": "USB pocket 0.5 mm smaller than the overmold",
   "override": {
-   "USB_OPEN_CLR": -0.2
+   "USB_POCKET_CLR": -0.25
   },
   "caught": true,
   "failed_checks": [
-   "no interference mating_usb_shell | lid.step#0",
-   "USB-C plug shell 8.4x2.6 and overmold 12.85x7.0 clear the lid"
+   "no interference mating_usb_overmold | lid.step#0",
+   "USB-C pocket centred on J1 (+-0.1) and above the overmold top",
+   "seated USB-C plug (shell 8.4x2.6, overmold 12.85x7.0) clears the lid"
+  ]
+ },
+ {
+  "case": "FPC loop tighter, panel 1 mm into the wall",
+  "override": {
+   "FPC_LOOP_GAP": 0.5,
+   "CLR_PANEL": -1.0
+  },
+  "caught": true,
+  "failed_checks": [
+   "no interference panel | lid.step#0",
+   "lid: wall >= 1.6 everywhere (ray method)"
   ]
  },
  {
@@ -30,8 +42,6 @@
   },
   "caught": true,
   "failed_checks": [
-   "base: STL watertight, volume within 0.5 % of STEP",
-   "lid: STL watertight, volume within 0.5 % of STEP",
    "board to side walls >= CLR_BOARD 0.5"
   ]
  },
@@ -46,8 +56,8 @@
    "insert@68.50,-3.50: hole 4.0 deep >= 6.7, wall >= 1.6",
    "insert@3.50,-44.50: hole 4.0 deep >= 6.7, wall >= 1.6",
    "insert@68.50,-44.50: hole 4.0 deep >= 6.7, wall >= 1.6",
-   "insert@-4.75,37.49: hole 4.0 deep >= 6.7, wall >= 1.6",
-   "insert@70.83,37.49: hole 4.0 deep >= 6.7, wall >= 1.6"
+   "insert@-4.75,35.49: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@70.83,35.49: hole 4.0 deep >= 6.7, wall >= 1.6"
   ]
  },
  {
@@ -61,8 +71,8 @@
    "insert@68.50,-3.50: hole 4.0 deep >= 6.7, wall >= 1.6",
    "insert@3.50,-44.50: hole 4.0 deep >= 6.7, wall >= 1.6",
    "insert@68.50,-44.50: hole 4.0 deep >= 6.7, wall >= 1.6",
-   "insert@-4.75,37.49: hole 4.0 deep >= 6.7, wall >= 1.6",
-   "insert@70.83,37.49: hole 4.0 deep >= 6.7, wall >= 1.6"
+   "insert@-4.75,35.49: hole 4.0 deep >= 6.7, wall >= 1.6",
+   "insert@70.83,35.49: hole 4.0 deep >= 6.7, wall >= 1.6"
   ]
  }
 ]

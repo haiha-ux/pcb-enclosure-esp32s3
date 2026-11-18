@@ -7,7 +7,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PY = sys.executable
 CASES = [
     ("WALL 1.4", {"WALL": 1.4}, "wall >= 1.6"),
-    ("USB opening 0.2 mm too small", {"USB_OPEN_CLR": -0.2}, "mating_usb_shell"),
+    ("USB pocket 0.5 mm smaller than the overmold", {"USB_POCKET_CLR": -0.25}, "mating_usb_overmold"),
+    ("FPC loop tighter, panel 1 mm into the wall", {"FPC_LOOP_GAP": 0.5, "CLR_PANEL": -1.0}, "no interference panel"),
     ("board clearance 0.2", {"CLR_BOARD": 0.2}, "board to side walls"),
     ("insert hole 5.0 deep", {"INSERT_HOLE_DEPTH": 5.0}, "deep >= 6.7"),
     ("insert hole 3.6", {"INSERT_HOLE_D": 3.6}, "insert@"),

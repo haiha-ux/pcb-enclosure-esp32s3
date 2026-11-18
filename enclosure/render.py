@@ -23,8 +23,8 @@ def meshes():
     return parts
 
 
-COL = {"base": (0.20, 0.22, 0.26), "lid": (0.82, 0.83, 0.85), "board_esp32s3_epaper": (0.05, 0.35, 0.15),
-       "epaper_GDEY029T94": (0.92, 0.92, 0.88), "epaper_fpc": (0.85, 0.55, 0.15), "battery_503450_assumed": (0.3, 0.45, 0.7)}
+COL = {"base": (0.20, 0.22, 0.26), "lid": (0.55, 0.58, 0.62), "board_esp32s3_epaper": (0.05, 0.35, 0.15),
+       "epaper_GDEY029T94": (0.86, 0.85, 0.78), "epaper_fpc": (0.85, 0.55, 0.15), "battery_503450_assumed": (0.3, 0.45, 0.7), "light_pipe_2mm_PMMA": (0.9, 0.3, 0.3)}
 
 
 def actor(path, col, offset=(0, 0, 0), opacity=1.0, clip=None):
@@ -40,12 +40,12 @@ def actor(path, col, offset=(0, 0, 0), opacity=1.0, clip=None):
     m = vtk.vtkPolyDataMapper(); m.SetInputConnection(src)
     a = vtk.vtkActor(); a.SetMapper(m)
     a.GetProperty().SetColor(*col); a.GetProperty().SetOpacity(opacity)
-    a.GetProperty().SetSpecular(0.2)
+    a.GetProperty().SetSpecular(0.2); a.GetProperty().SetDiffuse(0.75); a.GetProperty().SetAmbient(0.15)
     return a
 
 
 def shot(actors, name, pos, focal, up=(0, 0, 1), par=False, scale=None):
-    ren = vtk.vtkRenderer(); ren.SetBackground(1, 1, 1)
+    ren = vtk.vtkRenderer(); ren.GradientBackgroundOn(); ren.SetBackground(0.62, 0.66, 0.72); ren.SetBackground2(0.30, 0.33, 0.38)
     for a in actors: ren.AddActor(a)
     cam = ren.GetActiveCamera(); cam.SetPosition(*pos); cam.SetFocalPoint(*focal); cam.SetViewUp(*up)
     if par:

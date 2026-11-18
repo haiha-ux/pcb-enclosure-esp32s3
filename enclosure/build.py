@@ -107,7 +107,11 @@ def layout():
     L["corners"] = [(xi0 + c, yi1 - c), (xi1 - c, yi1 - c)]
     L["phr_x0"] = phr_x0
     bx, by, bz = P.BATT
-    L["battery"] = (36.0 - bx / 2, -46.0, P.Z_FLOOR_TOP, 36.0 + bx / 2, -46.0 + by, P.Z_FLOOR_TOP + bz)
+    b0 = yi0 + P.BATT_CLR                                    # as far from the antenna as the board allows
+    L["battery"] = (36.0 - bx / 2, b0, P.Z_FLOOR_TOP, 36.0 + bx / 2, b0 + by, P.Z_FLOOR_TOP + bz)
+    d2 = [c for c in step.children if c.label.startswith("LED_0603")]
+    d2 = min(d2, key=lambda c: abs(c.bounding_box().center().X - L["refs"]["D2"][0]) + abs(c.bounding_box().center().Y - L["refs"]["D2"][1]))
+    L["led_top"] = d2.bounding_box().max.Z
     return L, step
 
 
@@ -133,14 +137,34 @@ def build(L):
         base += cyl(x, y, z["floor_top"] - 0.01, bd["zb"], P.BOSS_OD)
     for (x, y) in L["corners"]:                              # lid columns, insert from the top
         base += cyl(x, y, z["floor_top"] - 0.01, z["corner_joint"], P.BOSS_OD)
+    I = L["interior"]
+    feats = []
+    for (x, y) in list(holes) + list(L["corners"]):
+        r = P.BOSS_OD / 2
+        top = bd["zb"] if (x, y) in [tuple(h_) for h_ in holes] else P.Z_SPLIT
+        # a boss closer than 0.8 mm to a wall is filled out to that wall (no unprintable slot)
+        wx = I["x0"] if x - r - I["x0"] < 0.8 else I["x1"] if I["x1"] - (x + r) < 0.8 else None
+        wy = I["y0"] if y - r - I["y0"] < 0.8 else I["y1"] if I["y1"] - (y + r) < 0.8 else None
+        for z0_, z1_, e in ((z["floor_top"] - 0.01, min(top, P.Z_SPLIT), 0.01), (P.Z_SPLIT, top, 0.0)):
+            if z1_ <= z0_:
+                continue
+            ex = None if wx is None else wx + (e if wx > x else -e)
+            ey = None if wy is None else wy + (e if wy > y else -e)
+            if ex is not None:
+                base += box(min(x, ex), y - r, z0_, max(x, ex), y + r, z1_)
+            if ey is not None:
+                base += box(x - r, min(y, ey), z0_, x + r, max(y, ey), z1_)
+            if ex is not None and ey is not None:
+                base += box(min(x, ex), min(y, ey), z0_, max(x, ex), max(y, ey), z1_)
     bx0, by0, _, bx1, by1, _ = L["battery"]
     g, t, h, arm = P.BATT_CLR, P.RIB, 3.0, 6.0
     for sx, xc in ((-1, bx0 - g), (1, bx1 + g)):
         for sy, yc in ((-1, by0 - g), (1, by1 + g)):
-            xs, ys = sorted((xc - sx * arm, xc + sx * t)), sorted((yc, yc + sy * t))
-            base += box(xs[0], ys[0], z["floor_top"] - 0.01, xs[1], ys[1], z["floor_top"] + h)
-            xs, ys = sorted((xc, xc + sx * t)), sorted((yc - sy * arm, yc + sy * t))
-            base += box(xs[0], ys[0], z["floor_top"] - 0.01, xs[1], ys[1], z["floor_top"] + h)
+            for xs, ys in ((sorted((xc - sx * arm, xc + sx * t)), sorted((yc, yc + sy * t))),
+                           (sorted((xc, xc + sx * t)), sorted((yc - sy * arm, yc + sy * t)))):
+                y0_ = max(ys[0], I["y0"] - 0.01)            # ribs stop at the front wall (it already holds the cell)
+                if ys[1] > y0_ + 0.02:
+                    base += box(xs[0], y0_, z["floor_top"] - 0.01, xs[1], ys[1], z["floor_top"] + h)
     for (x, y) in holes:
         base -= cyl(x, y, bd["zb"] - P.INSERT_HOLE_DEPTH, bd["zb"] + 1, P.INSERT_HOLE_D)
     for (x, y) in L["corners"]:
@@ -149,11 +173,13 @@ def build(L):
     # ---------------- lid ----------------
     lid_walls = prism(outer, z["split"], z["top"]) - prism(inner, z["split"] - 1, z["plate_bot"])
     lid = lid_walls
-    I = L["interior"]
     screws_lid = []
     for (x, y), ref in zip(holes, L["hole_refs"]):
         if x < L["panel"][0] - P.BOSS_OD:                    # holes not under the panel clamp the board from the lid
             lid += cyl(x, y, bd["zt"], z["plate_bot"] + 0.01, P.BOSS_OD)
+            r = P.BOSS_OD / 2
+            if y - r - I["y0"] < 0.8:                        # web to the wall instead of a 0.3 mm slot
+                lid += box(x - r, I["y0"] - 0.01, bd["zt"], x + r, y, z["plate_bot"] + 0.01)
             screws_lid.append((x, y, ref))
     for (x, y) in L["corners"]:
         lid += cyl(x, y, z["corner_joint"], z["plate_bot"] + 0.01, P.BOSS_OD)
@@ -171,6 +197,12 @@ def build(L):
     lid += box(p[0] - c - P.RIB, p[1] - c - P.RIB, rz0, f["x0"] - 0.5, p[1] - c, rz1)
     lid += box(f["x1"] + 0.5, p[1] - c - P.RIB, rz0, I["x1"] + 0.01, p[1] - c, rz1)
     lid += box(p[0] - c - P.RIB, p[4] + c, rz0, I["x1"] + 0.01, p[4] + c + P.RIB, rz1)
+    # relief over the IC bonding strip on the FPC side of the glass
+    lid -= box(p[0] - c, p[1] - c, z["plate_bot"] - 1, p[3] + c, p[1] + P.BONDING_STRIP, z["plate_bot"] + P.BONDING_RELIEF)
+    # light pipe guide for the CHG LED
+    dx, dy = L["refs"]["D2"]
+    pipe_bot = L["led_top"] + P.LED_PIPE_GAP
+    lid += cyl(dx, dy, pipe_bot, z["plate_bot"] + 0.01, P.LED_BORE_D + 2 * P.RIB)
     # reset pin guide tube
     sx, sy = L["refs"]["SW1"]
     tube_bot = bd["zt"] + P.H_TACT + P.RESET_TUBE_BOTTOM_GAP
@@ -181,8 +213,7 @@ def build(L):
     for (x, y) in L["corners"]:
         lid -= cyl(x, y, z["corner_joint"] - 1, z["top"] + 1, P.CLR_HOLE_M3)
     lid -= cyl(sx, sy, tube_bot - 1, z["top"] + 1, P.RESET_PIN_D)
-    dx, dy = L["refs"]["D2"]
-    lid -= cyl(dx, dy, z["plate_bot"] - 1, z["top"] + 1, P.LED_HOLE_D)
+    lid -= cyl(dx, dy, pipe_bot - 1, z["top"] + 1, P.LED_BORE_D)
     va = L["va"]
     win = box(va[0], va[1], z["plate_bot"] - 1, va[2], va[3], z["top"] + 1)
     k = P.WINDOW_CHAMFER
@@ -190,24 +221,36 @@ def build(L):
         Pos((va[0] + va[2]) / 2, (va[1] + va[3]) / 2) * Rectangle(va[2] - va[0], va[3] - va[1]),
         k + 0.001, taper=-45)
     lid -= win
-    # USB-C opening (stadium) + exterior recess for the overmold
+    # USB-C: pocket through the wall, sized for the overmold, so the plug seats fully (no recess behind the mouth)
     jx = (L["fab"]["J1"][0] + L["fab"]["J1"][2]) / 2
     jz = bd["zt"] + P.H_USBC / 2
-    ow, oh = P.USB_SHELL[0] + 2 * P.USB_OPEN_CLR, P.USB_SHELL[1] + 2 * P.USB_OPEN_CLR
     yw = I["y0"]
-    stad = Plane.XZ.offset(-(yw + 1)) * Pos(jx, jz) * RectangleRounded(ow, oh, 0.5)   # corner r 0.5 keeps the 8.4 x 2.6 shell box inside
-    lid -= extrude(stad, P.WALL + 2)   # Plane.XZ normal is -Y: from y = yw+1 toward -y
-    rw, rh = P.USB_OVERMOLD[0] + 2 * P.USB_RECESS_CLR, P.USB_OVERMOLD[1] + 2 * P.USB_RECESS_CLR
-    lid -= box(jx - rw / 2, yw - P.WALL - 1, z["split"] - 0.01, jx + rw / 2, yw - P.WALL + P.USB_RECESS_DEPTH, jz + rh / 2)  # open to the split: no thin ledge under it
+    rw, rh = P.USB_OVERMOLD[0] + 2 * P.USB_POCKET_CLR, P.USB_OVERMOLD[1] + 2 * P.USB_POCKET_CLR
+    lid -= box(jx - rw / 2, yw - P.WALL - 1, z["split"] - 0.01, jx + rw / 2, yw + 0.01, jz + rh / 2)  # open to the split: no thin ledge under it
+    ow, oh = rw, rh
     # Qwiic opening in the right wall
     j3 = L["J3_box"]
     qy, qz = (j3[1] + j3[4]) / 2, (j3[2] + j3[5]) / 2
     qw, qh = P.SHR04["width"] + 2 * P.QWIIC_OPEN_CLR, P.SHR04["height"] + 2 * P.QWIIC_OPEN_CLR
     lid -= box(I["x1"] - 1, qy - qw / 2, qz - qh / 2, I["x1"] + P.WALL + 1, qy + qw / 2, qz + qh / 2)
-    L["openings"] = {"usb": {"x": jx, "z": jz, "w": ow, "h": oh, "recess_w": rw, "recess_h": rh},
+    # locating lip: hangs from the lid inside the base wall all round, cut back wherever base parts sit
+    lip_ring = offset(inner, -P.LIP_CLR) - offset(inner, -(P.LIP_CLR + P.LIP_T))
+    lip = prism(lip_ring, z["split"] - P.LIP_H, z["split"] + 0.01)
+    lip += prism(inner - offset(inner, -(P.LIP_CLR + P.LIP_T)), z["split"], z["split"] + 1.7)
+    L["usb_tmp"] = {"x": jx, "z": jz}
+    feats.append(box(jx - rw / 2 - 2, I["y0"] - 1, z["split"] - P.LIP_H - 1, jx + rw / 2 + 2, I["y0"] + 2.5, z["split"] + 2))
+    feats.append(box(*L["battery"]))
+    bx0_, by0_, bx1_, _ = I["bulge"]
+    feats.append(box(bx0_ - 2.0, by0_ - 1.0, z["split"] - P.LIP_H - 1, bx1_ + 2.0, I["y0"] + 2.5, z["split"] + 2))
+    for f_ in feats + list((base - base_walls).solids()):
+        b_ = f_.bounding_box()
+        lip -= box(b_.min.X - 0.3, b_.min.Y - 0.3, z["split"] - P.LIP_H - 1, b_.max.X + 0.3, b_.max.Y + 0.3, z["split"] + 2)  # full height: no thin leftovers
+    lid += lip
+    L["lip_volume"] = lip.volume
+    L["openings"] = {"usb": {"x": jx, "z": jz, "w": ow, "h": oh},
                      "qwiic": {"y": qy, "z": qz, "w": qw, "h": qh},
                      "reset": {"x": sx, "y": sy, "d": P.RESET_PIN_D, "tube_bottom": tube_bot},
-                     "led": {"x": dx, "y": dy, "d": P.LED_HOLE_D}}
+                     "led": {"x": dx, "y": dy, "d": P.LED_BORE_D, "pipe_bottom": pipe_bot}}
     L["screws_lid"] = screws_lid
     return base, lid, base_walls, lid_walls
 
@@ -231,12 +274,15 @@ def mating(L):
     bd, o, I = L["board"], L["openings"], L["interior"]
     u = o["usb"]
     sw, sh = P.USB_SHELL
-    ext = I["y0"] - P.WALL + P.USB_RECESS_DEPTH                 # recess floor
+    mouth = L["fab"]["J1"][1]
+    front = mouth - 0.1                                         # overmold stops at the board edge, 0.1 from the mouth
     m = {
-        "usb_shell": box(u["x"] - sw / 2, ext - 0.1, u["z"] - sh / 2, u["x"] + sw / 2, L["fab"]["J1"][1], u["z"] + sh / 2),
-        "usb_overmold": box(u["x"] - P.USB_OVERMOLD[0] / 2, ext - 25, u["z"] - P.USB_OVERMOLD[1] / 2,
-                            u["x"] + P.USB_OVERMOLD[0] / 2, ext - 0.1, u["z"] + P.USB_OVERMOLD[1] / 2),
+        "usb_shell": box(u["x"] - sw / 2, front, u["z"] - sh / 2, u["x"] + sw / 2, mouth, u["z"] + sh / 2),
+        "usb_overmold": box(u["x"] - P.USB_OVERMOLD[0] / 2, front - 25, u["z"] - P.USB_OVERMOLD[1] / 2,
+                            u["x"] + P.USB_OVERMOLD[0] / 2, front, u["z"] + P.USB_OVERMOLD[1] / 2),
     }
+    if "qwiic" not in o or not o["qwiic"].get("w"):
+        return m
     j2y = (L["fab"]["J2"][1] + L["fab"]["J2"][3]) / 2
     m["phr2_plug"] = box(L["phr_x0"], j2y - P.PHR2["width"] / 2, bd["zt"], L["fab"]["J2"][0], j2y + P.PHR2["width"] / 2,
                          bd["zt"] + P.PHR2["height"])
@@ -263,7 +309,13 @@ def main():
     export_stl(base, OUT / "base.stl", tolerance=0.01, angular_tolerance=0.1)
     export_stl(lid, OUT / "lid.stl", tolerance=0.01, angular_tolerance=0.1)
     prox = {k: box(*v) for k, v in L["proxies"].items()}
-    panel = box(*L["panel"])
+    pn = L["panel"]
+    PL, PW, PE, PS = P.PANEL_TOP_LAYER                        # stepped glass: TFT 79.00 long, top layer 74.50
+    panel = box(pn[0], pn[1], pn[2], pn[3], pn[4], pn[2] + P.PANEL_TFT_T)
+    panel += box(pn[3] - PS - PW, pn[4] - PE - PL, pn[2] + P.PANEL_TFT_T - 0.01, pn[3] - PS, pn[4] - PE, pn[5])
+    led = L["openings"]["led"]
+    rod = cyl(led["x"], led["y"], led["pipe_bottom"], L["z"]["top"], P.LED_PIPE_D)
+    rod.label = "light_pipe_2mm_PMMA"
     fpc = fpc_solid(L)
     bd = L["board"]
     heads = {f"screw_head_{r}": cyl(x, y, bd["zt"], bd["zt"] + P.SCREW_HEAD_K, P.SCREW_HEAD_D)
@@ -280,14 +332,14 @@ def main():
     for k, v in heads.items():
         v.label = k
     step.label = "board_esp32s3_epaper"
-    asm = Compound(children=[base, lid, step, panel, fpc, batt, *prox.values(), *heads.values()], label="enclosure_assembly")
+    asm = Compound(children=[base, lid, step, panel, fpc, batt, rod, *prox.values(), *heads.values()], label="enclosure_assembly")
     export_step(asm, OUT / "enclosure_assembly.step")
     if not os.environ.get("ENCL_PARAMS"):   # break-test builds skip the 3MF; its mesher rejects some broken geometry
         mesher = Mesher()
         mesher.add_shape([base, lid], linear_deflection=0.01, angular_deflection=0.1)
         mesher.write(str(OUT / "enclosure.3mf"))
     # solids the verifier needs that are not printed parts
-    extra = {"panel": panel, "fpc": fpc, "battery": batt, "base_walls": base_walls, "lid_walls": lid_walls,
+    extra = {"panel": panel, "fpc": fpc, "battery": batt, "light_pipe": rod, "base_walls": base_walls, "lid_walls": lid_walls,
              **{f"proxy_{k}": v for k, v in prox.items()}, **heads, **{f"mating_{k}": v for k, v in mating(L).items()}}
     export_step(Compound(children=[v for v in extra.values()]), OUT / "check_solids.step")
     (OUT / "check_solids.json").write_text(json.dumps(list(extra.keys())))

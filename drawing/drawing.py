@@ -49,6 +49,7 @@ def setup(doc):
     ds.dxf.dimtxt, ds.dxf.dimasz, ds.dxf.dimexe, ds.dxf.dimexo = 2.5, 2.5, 1.0, 0.8
     ds.dxf.dimgap, ds.dxf.dimdec, ds.dxf.dimtad, ds.dxf.dimclrd, ds.dxf.dimclre = 0.8, 2, 1, 1, 1
     ds.dxf.dimzin = 8
+    ds.dxf.dimdsep = ord(".")
     doc.styles.add("ISO", font="isocpeur.ttf")
     ds.dxf.dimtxsty = "ISO"
 
@@ -61,11 +62,16 @@ def frame(msp, title, part, notes):
     msp.add_lwpolyline([(x0, y0), (W - 10, y0), (W - 10, y0 + 36), (x0, y0 + 36)], close=True, dxfattribs={"layer": "FRAME"})
     rows = [(title, 5), (f"Part: {part}   Scale 1:1   Units: mm   Sheet A3", 3),
             ("Material: PETG or PLA, FDM 0.4 mm nozzle, 0.2 mm layers   General tol. +-0.2", 2.5),
-            (f"Drawn: Ha Phan Thanh Hai   {datetime.date.today().isoformat()}   Projection: views labelled", 2.5)]
+            (f"Drawn: Ha Phan Thanh Hai   {datetime.date.today().isoformat()}   Projection: third angle", 2.5)]
     y = y0 + 28
     for t, h in rows:
         msp.add_text(t, height=h, dxfattribs={"layer": "TEXT", "style": "ISO"}).set_placement((x0 + 3, y))
         y -= 8
+    # third-angle projection symbol
+    sx, sy = x0 + 150, y0 + 22
+    msp.add_circle((sx + 18, sy), 4, dxfattribs={"layer": "FRAME"}); msp.add_circle((sx + 18, sy), 2, dxfattribs={"layer": "FRAME"})
+    msp.add_lwpolyline([(sx, sy - 2), (sx + 10, sy - 4), (sx + 10, sy + 4), (sx, sy + 2)], close=True, dxfattribs={"layer": "FRAME"})
+    msp.add_text("Third-angle", height=2.0, dxfattribs={"layer": "TEXT", "style": "ISO"}).set_placement((sx, sy - 10))
     y = H - 20
     for i, n in enumerate(notes, 1):
         msp.add_text(f"{i}. {n}", height=2.5, dxfattribs={"layer": "TEXT", "style": "ISO"}).set_placement((W - 180, y))
@@ -118,25 +124,29 @@ def lid_dims(msp, M, lo, hi, L):
     dim(msp, T(va[2], va[1]), T(va[2], va[3]), base=T(hi[0] + 8, 0), angle=90)
     dim(msp, T(lo[0], va[3]), T(va[0], va[3]), base=T(0, hi[1] + 16))
     dim(msp, T(va[2], hi[1]), T(va[2], va[3]), base=T(hi[0] + 16, 0), angle=90)
-    for k in ("reset", "led"):
+    for k, txt, tx in (("reset", f"RESET pin %%c{P.RESET_PIN_D} THRU, guide tube", -40), ("led", f"CHG LED light pipe %%c{P.LED_BORE_D} THRU (rod %%c{P.LED_PIPE_D})", -40)):
         o = L["openings"][k]
-        msp.add_text(f"{'RESET pin' if k == 'reset' else 'CHG LED'} %%c{o['d']:.1f} THRU", height=2.5,
-                     dxfattribs={"layer": "TEXT", "style": "ISO"}).set_placement(T(o["x"] + 3, o["y"] + 3))
-        dim(msp, T(lo[0], o["y"]), T(o["x"], o["y"]), base=T(0, o["y"] - 6 if k == "reset" else o["y"] + 6))
+        tip = T(o["x"], o["y"])
+        knee = (T(hi[0], 0)[0] + 25, tip[1] + (10 if k == "led" else -6))
+        msp.add_leader([tip, knee, (knee[0] + 75, knee[1])], dxfattribs={"layer": "DIM"})
+        msp.add_text(txt, height=2.5, dxfattribs={"layer": "TEXT", "style": "ISO"}).set_placement((knee[0] + 1, knee[1] + 1))
+        dim(msp, T(lo[0], o["y"]), T(o["x"], o["y"]), base=T(0, o["y"] - 4 if k == "reset" else o["y"] + 4))
     for (x, y, r) in L["screws_lid"]:
         msp.add_text(f"%%c{P.CLR_HOLE_M3} THRU ({r})", height=2.5, dxfattribs={"layer": "TEXT", "style": "ISO"}).set_placement(T(x + 4, y - 1))
     for (x, y) in L["corners"]:
         msp.add_text(f"%%c{P.CLR_HOLE_M3} THRU", height=2.5, dxfattribs={"layer": "TEXT", "style": "ISO"}).set_placement(T(x + 4, y - 1))
     u = L["openings"]["usb"]
-    dim(msp, F(u["x"] - u["w"] / 2, u["z"] - u["h"] / 2), F(u["x"] + u["w"] / 2, u["z"] - u["h"] / 2), base=F(0, lo[2] - 8))
-    dim(msp, F(lo[0], u["z"]), F(u["x"], u["z"]), base=F(0, hi[2] + 8))
-    dim(msp, F(u["x"] + u["w"] / 2, u["z"] - u["h"] / 2), F(u["x"] + u["w"] / 2, u["z"] + u["h"] / 2), base=F(u["x"] + 12, 0), angle=90)
+    zb = L["z"]["split"]
+    dim(msp, F(u["x"] - u["w"] / 2, zb), F(u["x"] + u["w"] / 2, zb), base=F(0, lo[2] - 10))
+    dim(msp, F(lo[0], hi[2]), F(u["x"], hi[2]), base=F(0, hi[2] + 10))
+    dim(msp, F(u["x"] + u["w"] / 2, zb), F(u["x"] + u["w"] / 2, u["z"] + u["h"] / 2), base=F(u["x"] + u["w"] / 2 + 8, 0), angle=90)
     dim(msp, F(lo[0], lo[2]), F(lo[0], hi[2]), base=F(lo[0] - 10, 0), angle=90)
+    msp.add_text("USB-C pocket through the wall, open to the parting line", height=2.5,
+                 dxfattribs={"layer": "TEXT", "style": "ISO"}).set_placement(F(lo[0], lo[2] - 20))
     q = L["openings"]["qwiic"]
-    dim(msp, R(q["y"] - q["w"] / 2, q["z"]), R(q["y"] + q["w"] / 2, q["z"]), base=R(0, lo[2] - 8))
-    dim(msp, R(q["y"], q["z"] - q["h"] / 2), R(q["y"], q["z"] + q["h"] / 2), base=R(q["y"] + 10, 0), angle=90)
-    dim(msp, R(lo[1], q["z"]), R(q["y"], q["z"]), base=R(0, hi[2] + 8))
-
+    dim(msp, R(q["y"] - q["w"] / 2, q["z"] - q["h"] / 2), R(q["y"] + q["w"] / 2, q["z"] - q["h"] / 2), base=R(0, lo[2] - 10))
+    dim(msp, R(q["y"] + q["w"] / 2, q["z"] - q["h"] / 2), R(q["y"] + q["w"] / 2, q["z"] + q["h"] / 2), base=R(q["y"] + q["w"] / 2 + 8, 0), angle=90)
+    dim(msp, R(lo[1], hi[2]), R(q["y"], hi[2]), base=R(0, hi[2] + 10))
 
 def base_dims(msp, M, lo, hi, L):
     T, F = M["TOP"], M["FRONT (from -Y)"]
@@ -161,21 +171,22 @@ def main():
     L = json.loads((OUT / "layout.json").read_text())
     common = [f"Board: esp32s3_epaper (KiCad), frame = kicad-cli STEP frame.",
               f"All walls >= 1.6 mm (checked, verify/report.json).",
-              "Openings positioned from KiCad footprint data, +-0.1 checked."]
+              "Opening positions match KiCad footprint data (CAD check, verify/report.json)."]
     lid = import_step(OUT / "lid.step")
     base = import_step(OUT / "base.step")
-    place = {"TOP": (55, 140), "FRONT (from -Y)": (55, 45), "RIGHT (from +X)": (185, 140)}
+    place = {"TOP": (55, 140), "FRONT (from -Y)": (55, 72), "RIGHT (from +X)": (190, 72)}
     sheet("lid", lid, L, place, lid_dims)
     sheet("base", base, L, place, base_dims)
     # title blocks + notes are added in a second pass so frame() stays independent of the views
     for part, title, notes in (("lid", "ESP32-S3 e-paper enclosure - LID", common + [
             "Print upside down (top plate on the bed). Window lip chamfer 0.4 x 45.",
-            "USB-C recess 0.4 deep, open to the parting line.",
-            "Panel GDEY029T94 bonded to the plate underside (double-sided tape)."]),
+            "Locating lip 1.7 wide, 2.0 deep, 0.2 clearance inside the base wall.",
+            "Panel GDEY029T94: tape on the plate underside, NOT over the 4.5 mm FPC-side bonding strip (0.3 relief)."]),
             ("base", "ESP32-S3 e-paper enclosure - BASE", common + [
             "Print as shown (floor on the bed).",
             "Battery pocket ribs for a 50 x 34 x 5 mm cell (assumed 503450, 1000 mAh).",
-            "Screws ISO 7045 M3: x6 at H2,H4 (4.4 engaged); x14 through lid at H1,H3 (4.4); x12 at lid corners (4.5)."])):
+            "Screws ISO 7045: M3x6 (2 pcs) at H2, H4; M3x14 (2 pcs) through lid at H1, H3; M3x12 (2 pcs) at lid corners.",
+            "Print a test coupon of one insert boss first: insert hole diameter depends on the printer."])):
         doc = ezdxf.readfile(DWG / f"{part}.dxf")
         frame(doc.modelspace(), title, part, notes)
         doc.saveas(DWG / f"{part}.dxf")

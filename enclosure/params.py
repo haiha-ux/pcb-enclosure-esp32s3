@@ -37,7 +37,7 @@ FPC_STIFFENER = 3.66
 # assumptions (no datasheet number): see README "Not certain"
 FPC_EXIT_ABOVE_PANEL_BOTTOM = 0.30    # FPC leaves the glass 0.3 mm above its underside
 J4_SLOT_Z_ABOVE_BOARD = 0.90          # FPC enters J4 0.9 mm above the board top
-FPC_LOOP_GAP = 0.50                   # loop apex to J4 front face
+FPC_LOOP_GAP = 1.50                   # straight FPC run in front of the J4 mouth (loop apex to J4 front face)
 
 # --- parts with no KiCad 3D model: height from datasheets ---------------------
 H_USBC = 3.16         # HRO TYPE-C-31-M-12 body height
@@ -46,7 +46,7 @@ TACT_BODY = 5.10
 H_JST_PH_SIDE = 5.50  # S2B-PH-SM4-TB side-entry header height
 H_FPC_CONN = 2.00     # Jushuo AFC07-S24FCA-00 height above board
 # mating plugs
-USB_SHELL = (8.40, 2.60)        # plug shell envelope the opening must pass (coordinator's figure)
+USB_SHELL = (8.40, 2.60)        # envelope around the largest plug shell 8.34 x 2.56 (KC opening figure, dekra source in SOURCES)
 USB_OVERMOLD = (12.85, 7.00)    # USB Type-C spec max after ECN 2023 (pre-ECN 12.35 x 6.5)
 PHR2 = dict(width=5.8, length=6.85, height=4.5)
 SHR04 = dict(width=7.0, length=5.0, height=2.8)   # width with protrusions
@@ -62,15 +62,23 @@ SCREW_HEAD_K = 2.4      # ISO 7045 M3 pan head k max
 # --- battery (assumption: 1000 mAh "503450" cell, naming convention 5.0 x 34 x 50) --
 BATT = (50.0, 34.0, 5.0)
 BATT_CLR = 0.5
+LIP_T, LIP_CLR, LIP_H = 1.7, 0.2, 2.0   # lid locating lip inside the base wall
+PANEL_TOP_LAYER = (74.50, 33.66, 0.80, 1.52)  # PS length, width, from far end, from VA side (datasheet p.7)
+PANEL_TFT_T = 0.60      # assumption: split of the 1.2 mm stack
+BONDING_STRIP = 4.5     # FPC-side strip kept clear of tape and lid (IC bonding area)
+BONDING_RELIEF = 0.3
 
 # openings
-USB_OPEN_CLR = 0.30     # per side around the shell envelope
-USB_RECESS_CLR = 0.30   # per side around the overmold
-USB_RECESS_DEPTH = 0.40 # exterior recess, leaves the wall 1.6 mm at the connector
+USB_POCKET_CLR = 0.30   # per side around the 12.85 x 7.0 overmold; the pocket goes through the wall
+USB_RECEPTACLE_DEPTH = 6.20   # mouth to mating datum (USB Type-C R2.0 via the source in SOURCES)
+USB_OVERMOLD_DATUM_MAX = 6.50 # USB-IF Locking Connector Spec rev 1.0: overmold face to mating datum, max
+USB_MOUTH_GAP_MAX = 0.35      # plug shell 6.65 - receptacle 6.20 - 0.10 tol: allowed overmold stand-off
 QWIIC_OPEN_CLR = 0.30
 RESET_PIN_D = 2.2       # paper-clip / pin hole over the RESET button
 RESET_TUBE_BOTTOM_GAP = 0.9
-LED_HOLE_D = 2.0
+LED_PIPE_D = 2.0        # 2 mm PMMA rod as light pipe
+LED_BORE_D = 2.1
+LED_PIPE_GAP = 0.5      # rod end above the LED
 WINDOW_CHAMFER = 0.4      # plate 2.0 - 0.4 = 1.6 left at the lip
 
 SOURCES = {
@@ -82,6 +90,9 @@ SOURCES = {
     "JST SHR-04V-S": "B 5.0 (7.0 with protrusions), height 2.8, length 5, JST SH catalogue p.2, https://www.jst-mfg.com/product/pdf/eng/eSH.pdf",
     "Jushuo AFC07-S24FCA-00": "height 2.00 (distributor page, tier B), https://www.xonelec.com/mpn/jushuo/afc07s24fca00",
     "ruthex RX-M3x5.7": "hole 4.0, L 5.7, min wall 1.6, https://www.igo3d.com/mediafiles/Sonstiges/Ruthex/ruthex_Datenblatt_RX-Serie.pdf; depth L+1 = 6.7 (tier C rule, https://machinistcalcs.com/guides/heat-set-insert-holes/)",
+    "USB-C mating": "receptacle depth 6.20, plug shell 6.65+-0.10 (https://electronics.stackexchange.com/questions/521884); overmold face <= 6.5 mm from mating datum (USB Type-C Locking Connector Specification rev 1.0, https://www.usb.org/sites/default/files/documents/usb_type-c_locking_connector_specification_rev_1_0_20160309_0.pdf)",
+    "USB-C plug shell max 8.34 x 2.56": "enclosure opening figure, https://dekraprod-media.e-spirit.cloud/d429af9d-aa2c-4b43-a4b8-b9b1ae69df3e/media/dekra-pr (tier B)",
+    "Jushuo AFC07-S24FCA-00 contact": "Bottom Contact, Slide Lock (LCSC C262567 part page, tier B), https://lcsc.com/product-detail/FFC-FPC-Flat-Flexible-Connector-Assemblies_JUSHUO-AFC07-S24FCA-00_C262567.html",
     "USB-C overmold": "12.85 x 7.0 max after USB Type-C ECN 2023 (tier B, https://www.allion.com.tw/news-center/cabc_usb_update/)",
     "ISO 7045 M3": "pan head dk 5.6, k 2.4 (max)",
     "ISO 273": "M3 clearance hole, medium 3.4",

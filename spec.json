@@ -13,7 +13,7 @@
   "kind": "bbox_dim",
   "a": "base.step#0",
   "axis": "y",
-  "target": 97.543,
+  "target": 96.543,
   "tol": 0.05,
   "op": "=="
  },
@@ -48,7 +48,7 @@
   "kind": "bbox_dim",
   "a": "lid.step#0",
   "axis": "y",
-  "target": 97.543,
+  "target": 96.543,
   "tol": 0.05,
   "op": "=="
  },
@@ -57,7 +57,7 @@
   "kind": "bbox_dim",
   "a": "lid.step#0",
   "axis": "z",
-  "target": 11.545,
+  "target": 13.545,
   "tol": 0.05,
   "op": "=="
  },
@@ -102,10 +102,10 @@
   ]
  },
  {
-  "name": "CHG LED hole",
+  "name": "CHG LED light-pipe bore (2 mm PMMA rod)",
   "kind": "hole_diameter",
   "a": "lid.step#0",
-  "target": 2.0,
+  "target": 2.1,
   "tol": 0.02,
   "op": "==",
   "count": 1,
@@ -150,29 +150,37 @@
   "a": "lid.step#0 window void at z plate_bot+0.1..0.5",
   "target": [
    41.254,
-   -36.803,
+   -38.803,
    71.11,
-   30.893
+   28.893
   ],
   "tol": 0.1,
   "op": "==",
   "axis": "xy rectangle [x0, y0, x1, y1]"
  },
  {
-  "name": "USB-C opening centre (x, z) = J1",
+  "name": "USB-C pocket centre x = J1 F.Fab centre",
   "kind": "distance",
-  "a": "lid USB opening centre",
-  "b": "J1 F.Fab centre x, board top + 3.16/2",
-  "target": [
-   14.0,
-   3.125
-  ],
+  "a": "lid USB pocket centre x",
+  "b": "J1 F.Fab centre x",
+  "target": 14.0,
   "tol": 0.1,
   "op": "==",
   "size": [
-   9.0,
-   3.2
+   13.45,
+   "open from parting line to z",
+   6.925
   ]
+ },
+ {
+  "name": "USB-C overmold can reach the receptacle mouth",
+  "kind": "distance",
+  "a": "first lid material in the 12.85x7.0 overmold footprint",
+  "b": "J1 mouth (F.Fab front edge)",
+  "target": 0.35,
+  "op": "<=",
+  "measured": 0.10000000000000142,
+  "note": "overmold face to mating datum = 6.2 + gap <= 6.5"
  },
  {
   "name": "Qwiic opening centre (y, z) = J3 STEP body",
@@ -198,7 +206,7 @@
   "target": 0.0,
   "tol": 0.0,
   "op": ">",
-  "measured": 0.21715728752537913
+  "measured": 2.5495097567963922
  },
  {
   "name": "reset tube clears the button at rest",

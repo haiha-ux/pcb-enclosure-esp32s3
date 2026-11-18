@@ -45,7 +45,7 @@ def main():
         count=len(L["screws_lid"]) + len(L["corners"]))
     add(name="RESET pin hole", kind="hole_diameter", a="lid.step#0", target=P.RESET_PIN_D, tol=0.02, op="==", count=1,
         at=[L["openings"]["reset"]["x"], L["openings"]["reset"]["y"]])
-    add(name="CHG LED hole", kind="hole_diameter", a="lid.step#0", target=P.LED_HOLE_D, tol=0.02, op="==", count=1,
+    add(name="CHG LED light-pipe bore (2 mm PMMA rod)", kind="hole_diameter", a="lid.step#0", target=P.LED_BORE_D, tol=0.02, op="==", count=1,
         at=[L["openings"]["led"]["x"], L["openings"]["led"]["y"]])
     for b in ("base.step#0", "lid.step#0"):
         add(name=f"board does not penetrate {b}", kind="min_distance", a="board", b=b, target=0.0, tol=0.0, op=">=",
@@ -56,8 +56,11 @@ def main():
     add(name="display window = GDEY029T94 viewing area", kind="contains", a="lid.step#0 window void at z plate_bot+0.1..0.5",
         target=[round(v, 3) for v in va], tol=0.1, op="==", axis="xy rectangle [x0, y0, x1, y1]")
     u = L["openings"]["usb"]
-    add(name="USB-C opening centre (x, z) = J1", kind="distance", a="lid USB opening centre", b="J1 F.Fab centre x, board top + 3.16/2",
-        target=[round(u["x"], 3), round(u["z"], 3)], tol=0.1, op="==", size=[u["w"], u["h"]])
+    add(name="USB-C pocket centre x = J1 F.Fab centre", kind="distance", a="lid USB pocket centre x", b="J1 F.Fab centre x",
+        target=round(u["x"], 3), tol=0.1, op="==", size=[u["w"], "open from parting line to z", round(u["z"] + u["h"] / 2, 3)])
+    add(name="USB-C overmold can reach the receptacle mouth", kind="distance", a="first lid material in the 12.85x7.0 overmold footprint",
+        b="J1 mouth (F.Fab front edge)", target=P.USB_MOUTH_GAP_MAX, op="<=", measured=R["usb.overmold_stop_to_mouth"],
+        note=f"overmold face to mating datum = {P.USB_RECEPTACLE_DEPTH} + gap <= {P.USB_OVERMOLD_DATUM_MAX}")
     q = L["openings"]["qwiic"]
     add(name="Qwiic opening centre (y, z) = J3 STEP body", kind="distance", a="lid Qwiic opening centre", b="J3 3D body centre",
         target=[round(q["y"], 3), round(q["z"], 3)], tol=0.1, op="==", size=[q["w"], q["h"]])

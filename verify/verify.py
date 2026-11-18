@@ -79,6 +79,20 @@ def min_wall(stl_path):
     return float(finite.min()), float(np.percentile(finite, 1)), m.triangles_center[i].tolist(), int(np.isinf(d).sum())
 
 
+def min_air_gap(stl_path):
+    """Narrowest slot inside one part: ray from every face outward to the next face of the same part."""
+    m = trimesh.load(stl_path)
+    eps = 1e-4
+    origins = m.triangles_center + m.face_normals * eps
+    loc, idx_ray, idx_tri = m.ray.intersects_location(origins, m.face_normals, multiple_hits=False)
+    d = np.linalg.norm(loc - origins[idx_ray], axis=1)
+    # a slot has facing walls; a ray that hits a face at a steep angle is a wedge-shaped corner, not a slot
+    facing = np.einsum("ij,ij->i", m.face_normals[idx_ray], m.face_normals[idx_tri]) < -0.9
+    d, idx_ray = d[facing], idx_ray[facing]
+    i = int(np.argmin(d))
+    return float(d[i]), m.triangles_center[idx_ray[i]].tolist()
+
+
 def overhangs(stl_path, flip):
     m = trimesh.load(stl_path)
     if flip:
@@ -182,7 +196,7 @@ def main():
     check("no interference base | lid", v < 1e-3, common_volume=v)
     # non-enclosure pairs that must not collide either
     inner = [("panel", "board"), ("panel", "proxy_J2_JST-PH"), ("panel", "proxy_J4_FPC"), ("panel", "proxy_SW2_tact"),
-             ("fpc", "board"), ("battery", "board")] + [(h, "panel") for h in extra if h.startswith("screw_head_H")]
+             ("fpc", "board"), ("battery", "board"), ("light_pipe", "board"), ("light_pipe", "proxy_J2_JST-PH")] + [(h, "panel") for h in extra if h.startswith("screw_head_H")]
     for a, b_ in inner:
         A = extra[a]
         Bs = board.solids() if b_ == "board" else [extra[b_]]
@@ -202,15 +216,28 @@ def main():
     jz = bd["zt"] + P.H_USBC / 2
     vb = void_bbox(lid, (jx - 12, I["y0"] - 1.2, z["split"] + 0.1, jx + 12, I["y0"] - 0.1, z["top"] - 0.1))
     c = (vb[0] + vb[1]) / 2
-    report.update({"usb.opening_cx": c[0], "usb.opening_cz": c[2], "usb.opening_w": vb[1][0] - vb[0][0],
-                   "usb.opening_h": vb[1][2] - vb[0][2], "usb.connector_cx": jx, "usb.connector_cz": jz})
-    check("USB-C opening centred on J1 (+-0.1)", abs(c[0] - jx) <= TOL_ALIGN and abs(c[2] - jz) <= TOL_ALIGN,
-          dx=c[0] - jx, dz=c[2] - jz)
+    top_need = jz + P.USB_OVERMOLD[1] / 2
+    report.update({"usb.pocket_cx": c[0], "usb.pocket_w": vb[1][0] - vb[0][0], "usb.pocket_top_z": vb[1][2],
+                   "usb.connector_cx": jx, "usb.connector_cz": jz})
+    check("USB-C pocket centred on J1 (+-0.1) and above the overmold top", abs(c[0] - jx) <= TOL_ALIGN and vb[1][2] > top_need,
+          dx=c[0] - jx, pocket_top=vb[1][2], overmold_top=top_need)
+    # how close can the overmold get to the receptacle mouth? first obstruction in its footprint
+    mouth = L["fab"]["J1"][1]
+    ow, oh = P.USB_OVERMOLD
+    probe = box(jx - ow / 2, mouth - 40, jz - oh / 2, jx + ow / 2, mouth - 1e-3, jz + oh / 2)
+    hit = probe & lid
+    stop_lid = max((s_.bounding_box().max.Y for s_ in hit.solids()), default=None) if hit is not None else None
+    stop = max(v for v in (stop_lid, bd["y0"]) if v is not None)     # the board edge stops it anyway
+    gap = mouth - stop
+    report.update({"usb.overmold_stop_to_mouth": gap, "usb.overmold_stop_by": "lid" if stop == stop_lid else "board edge",
+                   "usb.overmold_face_to_mating_datum": P.USB_RECEPTACLE_DEPTH + gap})
+    check(f"USB-C overmold reaches within {P.USB_MOUTH_GAP_MAX} of the mouth (datum <= {P.USB_OVERMOLD_DATUM_MAX})",
+          gap <= P.USB_MOUTH_GAP_MAX and P.USB_RECEPTACLE_DEPTH + gap <= P.USB_OVERMOLD_DATUM_MAX, gap=gap,
+          datum=P.USB_RECEPTACLE_DEPTH + gap, stopped_by=report["usb.overmold_stop_by"])
     dsh = lid.distance_to(extra["mating_usb_shell"])
     dom = lid.distance_to(extra["mating_usb_overmold"])
     report["usb.plug_shell_to_lid"], report["usb.plug_overmold_to_lid"] = dsh, dom
-    report["usb.mouth_to_recess_floor"] = L["fab"]["J1"][1] - (I["y0"] - P.WALL + P.USB_RECESS_DEPTH)
-    check("USB-C plug shell 8.4x2.6 and overmold 12.85x7.0 clear the lid", dsh > 0 and dom > 0, shell=dsh, overmold=dom)
+    check("seated USB-C plug (shell 8.4x2.6, overmold 12.85x7.0) clears the lid", dsh > 0 and dom > 0, shell=dsh, overmold=dom)
     j3 = L["J3_box"]
     qy, qz = (j3[1] + j3[4]) / 2, (j3[2] + j3[5]) / 2
     vb = void_bbox(lid, (I["x1"] + 0.1, qy - 10, z["split"] + 0.1, I["x1"] + P.WALL - 0.1, qy + 10, z["plate_bot"] - 0.1))
@@ -220,7 +247,7 @@ def main():
     dq = lid.distance_to(extra["mating_shr04_plug"])
     report["qwiic.plug_to_lid"] = dq
     check("SHR-04V plug clears the lid", dq > 0, clearance=dq)
-    for key, ref, dnom in (("reset", "SW1", P.RESET_PIN_D), ("led", "D2", P.LED_HOLE_D)):
+    for key, ref, dnom in (("reset", "SW1", P.RESET_PIN_D), ("led", "D2", P.LED_BORE_D)):
         x, y = L["refs"][ref]
         vb = void_bbox(lid, (x - 4, y - 4, z["plate_bot"] + 0.1, x + 4, y + 4, z["top"] - 0.1))
         c = (vb[0] + vb[1]) / 2
@@ -231,7 +258,14 @@ def main():
     btn_top = bd["zt"] + P.H_TACT
     report["reset.tube_bottom_to_button_top"] = L["openings"]["reset"]["tube_bottom"] - btn_top
     report["reset.pin_depth_from_lid_top_to_button_top"] = z["top"] - btn_top
-    report["led.lid_top_to_led_top"] = z["top"] - (bd["zt"] + 1.1)   # 0603 LED 1.1 tall in the KiCad STEP
+    led = L["openings"]["led"]
+    report["led.pipe_bottom_to_led_top"] = led["pipe_bottom"] - L["led_top"]
+    report["led.light_pipe_length"] = z["top"] - led["pipe_bottom"]
+    check("light-pipe guide clears the LED", report["led.pipe_bottom_to_led_top"] > 0, gap=report["led.pipe_bottom_to_led_top"])
+    br = box(I["x1"] - 12, I["y0"] - 0.1, z["split"] - P.LIP_H, I["x1"], I["y0"] + 12, z["split"])
+    lipv = sum(s_.volume for s_ in (br & lid).solids()) if (br & lid) is not None else 0.0
+    report["lid.lip_volume_bottom_right_corner"] = lipv
+    check("lid has a locating lip at the bottom-right corner", lipv > 1.0, volume=lipv)
     check("reset tube does not touch the button at rest", report["reset.tube_bottom_to_button_top"] > 0,
           gap=report["reset.tube_bottom_to_button_top"])
     va = L["va"]
@@ -245,6 +279,9 @@ def main():
         mw, p1, where, miss = min_wall(OUT / f"{n}.stl")
         report[f"{n}.stl.min_wall"], report[f"{n}.stl.wall_p1"], report[f"{n}.stl.min_wall_at"] = mw, p1, where
         check(f"{n}: wall >= 1.6 everywhere (ray method)", mw >= 1.6 - 0.01 and miss == 0, min_wall=mw, at=where, rays_missed=miss)
+        g, at = min_air_gap(OUT / f"{n}.stl")
+        report[f"{n}.stl.min_slot"], report[f"{n}.stl.min_slot_at"] = g, at
+        check(f"{n}: no slot narrower than 0.8 mm (two extrusion lines)", g >= 0.8, min_slot=g, at=at)
         area, centres = overhangs(OUT / f"{n}.stl", flip)
         report[f"{n}.print.overhang_gt45_area_mm2"] = area
         report[f"{n}.print.orientation"] = "lid upside down (top plate on the bed)" if flip else "as modelled (floor on the bed)"
